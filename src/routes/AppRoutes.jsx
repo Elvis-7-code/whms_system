@@ -34,4 +34,4 @@ export default function AppRoutes() {
         <Route path={PATHS.settings} element={<Settings />} />
       </Route>
     </Routes>
-  );
+  );}
