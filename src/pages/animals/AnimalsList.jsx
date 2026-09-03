@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../../components/layout/PageLayout.jsx';
-import Loader from '../../components/Loader.jsx';
+import Loader from '../../components/common/Loader.jsx';
 import * as animalService from '../../services/animalService.js';
 
 function AnimalsList() {

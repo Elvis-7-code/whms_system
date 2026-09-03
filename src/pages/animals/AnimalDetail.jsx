@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import PageLayout from '../../components/layout/PageLayout';
-import Loader from '../../components/Loader';
+import Loader from '../../components/common/Loader';
 import * as animalService from '../../services/animalService';
 
 function AnimalDetail() {
