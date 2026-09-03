@@ -1,11 +1,16 @@
-import apiClient from '../api/client';
+import apiClient from "../api/client";
 
-export const animalService = {
-  getAll: (params) => apiClient.get('/animals', { params }),
-  getById: (id) => apiClient.get(`/animals/${id}`),
-  create: (payload) => apiClient.post('/animals', payload),
-  update: (id, payload) => apiClient.put(`/animals/${id}`, payload),
-  remove: (id) => apiClient.delete(`/animals/${id}`),
-};
+export const getAll = (params) =>
+  apiClient.get("/animals", { params });
 
-export default animalService;
+export const getById = (id) =>
+  apiClient.get(`/animals/${id}`);
+
+export const create = (payload) =>
+  apiClient.post("/animals", payload);
+
+export const update = (id, payload) =>
+  apiClient.put(`/animals/${id}`, payload);
+
+export const remove = (id) =>
+  apiClient.delete(`/animals/${id}`);

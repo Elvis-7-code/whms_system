@@ -11,7 +11,7 @@ function AnimalsList() {
 
     useEffect(() => {
         animalService
-            .getAllAnimals()
+            .getAll()
             .then(setAnimals)
             .catch(() => setError('Could not load animals.'))
             .finally(() => setIsLoading(false));

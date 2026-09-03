@@ -12,7 +12,7 @@ function AnimalDetail() {
 
   useEffect(() => {
     animalService
-    .getAnimalById(id)
+    .getById(id)
     .then(setAnimal)
     .catch(()=> setError('Could not load this animal.'))
     .finally(() => setIsLoading(false));
