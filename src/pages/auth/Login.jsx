@@ -1,7 +1,7 @@
-import {} from "react";
+import {useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/authContext";
-import Button from "../../components/Button.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
+import Button from "../../components/common/Button.jsx";
 import {PATHS} from "../../routes/paths";
 
 export default function Login() {

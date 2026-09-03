@@ -19,4 +19,4 @@ export default function Vaccinations() {
     //   .then((res) => { /* setData(res.data) */ })
     //   .catch(() => setError('Could not load Vaccinations.'))
     //   .finally(() => setLoading(false));
-  }, []);
+  }, []);}
