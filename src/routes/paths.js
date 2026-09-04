@@ -1,7 +1,8 @@
 export const PATHS = {
+  landing: '/',
   login: '/login',
   signup: '/signup',
-  dashboard: '/',
+  dashboard: '/dashboard',
   animals: '/animals',
   animalDetail: (id = ':id') => `/animals/${id}`,
   breeding: '/breeding',

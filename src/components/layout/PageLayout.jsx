@@ -1,21 +1,11 @@
-function SearchBar({
-  value,
-  onChange,
-  placeholder = 'Search...',
-}) {
-  return (
-    <div className="search-bar">
-      <span className="search-icon">🔍</span>
+import DashboardLayout from './DashboardLayout.jsx';
 
-      <input
-        type="search"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        aria-label={placeholder}
-      />
-    </div>
+function PageLayout({ children }) {
+  return (
+    <DashboardLayout>
+      {children}
+    </DashboardLayout>
   );
 }
 
-export default SearchBar;
+export default PageLayout;

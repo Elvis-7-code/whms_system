@@ -33,7 +33,7 @@ export default function Login() {
       // BACKEND CALL: POST {baseURL}/auth/login
       await login(form.email, form.password);
 
-      navigate(PATHS.ANIMALS_LIST);
+      navigate(PATHS.animals);
     } catch (err) {
       setError(
         err?.response?.data?.message ||
@@ -158,7 +158,7 @@ export default function Login() {
         >
           Don't have an account?{" "}
           <Link
-            to={PATHS.SIGNUP}
+            to={PATHS.signup}
             style={{
               color: "var(--color-accent-green)",
               fontWeight: 600,

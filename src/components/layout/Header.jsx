@@ -1,10 +1,7 @@
-import { useContext } from 'react';
-import { AuthContext } from '../../context/AuthContext.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 function Header({ onMenuClick }) {
-  const auth = useContext(AuthContext);
-
-  const user = auth?.user;
+  const { user } = useAuth();
 
   return (
     <header className="app-header">
@@ -40,13 +37,9 @@ function Header({ onMenuClick }) {
           </div>
 
           <div className="user-info">
-            <strong>
-              {user?.name || 'User'}
-            </strong>
+            <strong>{user?.name || 'User'}</strong>
 
-            <span>
-              {user?.role || 'Worker'}
-            </span>
+            <span>{user?.role || 'Worker'}</span>
           </div>
         </div>
       </div>
