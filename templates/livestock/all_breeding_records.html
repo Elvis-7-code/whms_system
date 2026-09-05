@@ -1,0 +1,270 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Breeding Records - WAHOME HERD{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>🐄 Breeding Records</h1>
+
+        <p>
+            Breeding and reproduction records for all livestock
+        </p>
+
+    </div>
+
+    <div style="
+        background:white;
+        padding:12px 18px;
+        border-radius:8px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.06);
+        font-weight:bold;
+    ">
+
+        {{ records|length }}
+        Record{{ records|length|pluralize }}
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    {% if records %}
+
+    <div style="overflow-x:auto;">
+
+        <table style="
+            width:100%;
+            border-collapse:collapse;
+            min-width:950px;
+        ">
+
+            <thead>
+
+                <tr style="background:#f0fdf4;">
+
+                    <th style="padding:14px; text-align:left;">
+                        Female
+                    </th>
+
+                    <th style="padding:14px; text-align:left;">
+                        Male
+                    </th>
+
+                    <th style="padding:14px; text-align:left;">
+                        Breeding Date
+                    </th>
+
+                    <th style="padding:14px; text-align:left;">
+                        Expected Birth
+                    </th>
+
+                    <th style="padding:14px; text-align:left;">
+                        Actual Birth
+                    </th>
+
+                    <th style="padding:14px; text-align:left;">
+                        Offspring
+                    </th>
+
+                    <th style="padding:14px; text-align:left;">
+                        Status
+                    </th>
+
+                    <th style="padding:14px; text-align:left;">
+                        Notes
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for record in records %}
+
+                <tr style="border-bottom:1px solid #e5e7eb;">
+
+                    <!-- FEMALE -->
+
+                    <td style="padding:14px;">
+
+                        <a
+                            href="{% url 'animal_detail' record.female.animal_id %}"
+                            style="
+                                color:#166534;
+                                font-weight:bold;
+                                text-decoration:none;
+                            "
+                        >
+                            {{ record.female.animal_id }}
+                        </a>
+
+                    </td>
+
+
+                    <!-- MALE -->
+
+                    <td style="padding:14px;">
+
+                        {% if record.male %}
+
+                            <a
+                                href="{% url 'animal_detail' record.male.animal_id %}"
+                                style="
+                                    color:#166534;
+                                    font-weight:bold;
+                                    text-decoration:none;
+                                "
+                            >
+                                {{ record.male.animal_id }}
+                            </a>
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- BREEDING DATE -->
+
+                    <td style="padding:14px;">
+                        {{ record.breeding_date|date:"d M Y" }}
+                    </td>
+
+
+                    <!-- EXPECTED BIRTH -->
+
+                    <td style="padding:14px;">
+
+                        {% if record.expected_birth_date %}
+
+                            {{ record.expected_birth_date|date:"d M Y" }}
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ACTUAL BIRTH -->
+
+                    <td style="padding:14px;">
+
+                        {% if record.actual_birth_date %}
+
+                            {{ record.actual_birth_date|date:"d M Y" }}
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- OFFSPRING -->
+
+                    <td style="padding:14px;">
+
+                        {% if record.offspring_count != None %}
+
+                            {{ record.offspring_count }}
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td style="padding:14px;">
+
+                        <span style="
+                            display:inline-block;
+                            padding:5px 10px;
+                            border-radius:20px;
+                            background:#dcfce7;
+                            color:#166534;
+                            font-size:12px;
+                            font-weight:bold;
+                        ">
+                            {{ record.get_status_display }}
+                        </span>
+
+                    </td>
+
+
+                    <!-- NOTES -->
+
+                    <td style="padding:14px;">
+
+                        {% if record.notes %}
+
+                            {{ record.notes }}
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {% else %}
+
+    <div style="
+        text-align:center;
+        padding:50px 20px;
+        color:#6b7280;
+    ">
+
+        <div style="
+            font-size:40px;
+            margin-bottom:10px;
+        ">
+            🐄
+        </div>
+
+        <h3>No Breeding Records Yet</h3>
+
+        <p>
+            Breeding records added to your livestock
+            will appear here.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

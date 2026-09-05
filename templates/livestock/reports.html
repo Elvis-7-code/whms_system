@@ -1,0 +1,2103 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Reports & Analytics - WAHOME HERD{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .report-header {
+        margin-bottom: 30px;
+    }
+
+    .report-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 25px;
+    }
+
+    .report-header h1 {
+        margin: 0;
+        font-size: 30px;
+        color: #1b5e20;
+    }
+
+    .report-header p {
+        margin-top: 8px;
+        color: #6c7770;
+    }
+
+
+    /* ========================================================
+       REPORT EXPORT
+    ======================================================== */
+
+    .export-panel {
+        background: white;
+        border-radius: 14px;
+        padding: 22px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        border: 1px solid #e8eee9;
+    }
+
+    .export-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 18px;
+    }
+
+    .export-title {
+        margin: 0;
+        font-size: 19px;
+        color: #1b5e20;
+    }
+
+    .export-description {
+        margin: 5px 0 0;
+        color: #778078;
+        font-size: 13px;
+    }
+
+    .export-form {
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .export-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 240px;
+    }
+
+    .export-field label {
+        font-size: 12px;
+        font-weight: bold;
+        color: #536057;
+    }
+
+    .export-select {
+        height: 43px;
+        padding: 0 13px;
+        border: 1px solid #d8e1da;
+        border-radius: 8px;
+        background: #fff;
+        color: #354139;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .export-select:focus {
+        border-color: #2f7548;
+        box-shadow: 0 0 0 3px rgba(47,117,72,0.10);
+    }
+
+    .export-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .export-button {
+        height: 43px;
+        border: none;
+        border-radius: 8px;
+        padding: 0 17px;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .export-button:hover {
+        transform: translateY(-1px);
+    }
+
+    .pdf-button {
+        background: #b3261e;
+        color: white;
+    }
+
+    .pdf-button:hover {
+        background: #972018;
+    }
+
+    .excel-button {
+        background: #217346;
+        color: white;
+    }
+
+    .excel-button:hover {
+        background: #1a5d38;
+    }
+
+    .csv-button {
+        background: #536878;
+        color: white;
+    }
+
+    .csv-button:hover {
+        background: #435663;
+    }
+
+
+    /* ========================================================
+       REPORT SECTIONS
+    ======================================================== */
+
+    .report-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-size: 21px;
+        color: #1b5e20;
+        margin-bottom: 15px;
+    }
+
+
+    /* ========================================================
+       KPI CARDS
+    ======================================================== */
+
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .report-card {
+        background: white;
+        border-radius: 12px;
+        padding: 22px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .card-title {
+        font-size: 14px;
+        color: #68736c;
+        margin-bottom: 10px;
+    }
+
+    .card-value {
+        font-size: 30px;
+        font-weight: bold;
+        color: #1b5e20;
+    }
+
+    .card-subtitle {
+        margin-top: 8px;
+        font-size: 13px;
+        color: #7b847e;
+    }
+
+
+    /* ========================================================
+       REPORT BOXES
+    ======================================================== */
+
+    .report-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 15px;
+    }
+
+    .report-box {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .report-box h3 {
+        margin: 0 0 10px;
+        color: #6b756e;
+        font-size: 14px;
+    }
+
+    .report-box p {
+        margin: 0;
+        font-size: 27px;
+        font-weight: bold;
+        color: #1b5e20;
+    }
+
+
+    /* ========================================================
+       ANALYTICS
+    ======================================================== */
+
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .chart-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .chart-card h3 {
+        margin: 0 0 5px;
+        color: #1b5e20;
+        font-size: 18px;
+    }
+
+    .chart-card p {
+        margin: 0 0 18px;
+        color: #7a837d;
+        font-size: 13px;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 320px;
+    }
+
+    .full-chart {
+        grid-column: 1 / -1;
+    }
+
+    .full-chart .chart-container {
+        height: 380px;
+    }
+
+
+    /* ========================================================
+       PERFORMANCE
+    ======================================================== */
+
+    .performance-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .performance-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        overflow-x: auto;
+    }
+
+    .performance-card h3 {
+        margin: 0 0 5px;
+        color: #1b5e20;
+        font-size: 18px;
+    }
+
+    .performance-card p {
+        margin: 0 0 18px;
+        color: #7a837d;
+        font-size: 13px;
+    }
+
+    .rank {
+        font-weight: bold;
+        color: #1b5e20;
+        width: 45px;
+    }
+
+    .performance-animal {
+        color: #2f7548;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .performance-animal:hover {
+        text-decoration: underline;
+    }
+
+    .performance-value {
+        font-weight: bold;
+        color: #1b5e20;
+        white-space: nowrap;
+    }
+
+    .species-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 15px;
+        background: #edf5ef;
+        color: #2f7548;
+        font-size: 11px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+
+    /* ========================================================
+       PROFITABILITY
+    ======================================================== */
+
+    .profit-positive {
+        color: #1b5e20;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .profit-negative {
+        color: #b3261e;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+
+    /* ========================================================
+       TABLES
+    ======================================================== */
+
+    .table-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #f0f4f1;
+        color: #445048;
+        text-align: left;
+        padding: 13px;
+        font-size: 13px;
+    }
+
+    td {
+        padding: 13px;
+        border-bottom: 1px solid #edf0ed;
+        font-size: 14px;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    .animal-link {
+        color: #2f7548;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .animal-link:hover {
+        text-decoration: underline;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 20px;
+        background: #edf5ef;
+        color: #2f7548;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .empty {
+        text-align: center;
+        color: #888;
+        padding: 25px;
+    }
+
+
+    /* ========================================================
+       RESPONSIVE
+    ======================================================== */
+
+    @media (max-width: 1100px) {
+
+        .card-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .report-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .analytics-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .performance-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .full-chart {
+            grid-column: auto;
+        }
+
+        .report-header-top {
+            flex-direction: column;
+        }
+
+    }
+
+
+    @media (max-width: 800px) {
+
+        .report-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .export-form {
+            align-items: stretch;
+        }
+
+        .export-field {
+            width: 100%;
+            min-width: 0;
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        .card-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .report-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .chart-container {
+            height: 280px;
+        }
+
+        .full-chart .chart-container {
+            height: 300px;
+        }
+
+        .export-buttons {
+            width: 100%;
+        }
+
+        .export-button {
+            flex: 1;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="report-header">
+
+    <div class="report-header-top">
+
+        <div>
+
+            <h1>Farm Reports & Analytics</h1>
+
+            <p>
+                Monitor livestock performance, health, breeding, production and financial activity.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     REPORT EXPORT
+======================================================== -->
+
+<div class="export-panel">
+
+    <div class="export-header">
+
+        <div>
+
+            <h2 class="export-title">
+                Generate Farm Report
+            </h2>
+
+            <p class="export-description">
+                Download your farm data as a professional PDF, Excel spreadsheet or CSV file.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <form
+        action="{% url 'export_report' %}"
+        method="get"
+        class="export-form"
+    >
+
+        <div class="export-field">
+
+            <label for="report-type">
+                Report Type
+            </label>
+
+            <select
+                id="report-type"
+                name="type"
+                class="export-select"
+            >
+
+                <option value="comprehensive">
+                    Comprehensive Farm Report
+                </option>
+
+                <option value="livestock">
+                    Livestock Report
+                </option>
+
+                <option value="health">
+                    Health Report
+                </option>
+
+                <option value="breeding">
+                    Breeding Report
+                </option>
+
+                <option value="production">
+                    Production Report
+                </option>
+
+                <option value="financial">
+                    Financial Report
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="export-buttons">
+
+            <button
+                type="submit"
+                name="format"
+                value="pdf"
+                class="export-button pdf-button"
+            >
+                📄 Generate PDF
+            </button>
+
+            <button
+                type="submit"
+                name="format"
+                value="excel"
+                class="export-button excel-button"
+            >
+                📊 Export Excel
+            </button>
+
+            <button
+                type="submit"
+                name="format"
+                value="csv"
+                class="export-button csv-button"
+            >
+                📋 Export CSV
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- ========================================================
+     HERD SUMMARY
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Herd Summary
+    </div>
+
+    <div class="card-grid">
+
+        <div class="report-card">
+            <div class="card-title">Total Livestock</div>
+            <div class="card-value">{{ total_animals }}</div>
+            <div class="card-subtitle">All animals recorded</div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Active Animals</div>
+            <div class="card-value">{{ active_animals }}</div>
+            <div class="card-subtitle">Currently on the farm</div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Sold Animals</div>
+            <div class="card-value">{{ sold_animals }}</div>
+            <div class="card-subtitle">Animals sold</div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Deceased Animals</div>
+            <div class="card-value">{{ deceased_animals }}</div>
+            <div class="card-subtitle">Recorded deceased</div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     HERD COMPOSITION
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Herd Composition
+    </div>
+
+    <div class="report-grid">
+
+        <div class="report-box">
+            <h3>Cows</h3>
+            <p>{{ cows }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Goats</h3>
+            <p>{{ goats }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Sheep</h3>
+            <p>{{ sheep }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Males</h3>
+            <p>{{ males }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Females</h3>
+            <p>{{ females }}</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     RECORD SUMMARY
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Records & Performance
+    </div>
+
+    <div class="report-grid">
+
+        <div class="report-box">
+            <h3>Average Weight</h3>
+            <p>{{ average_weight|floatformat:2 }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Health Records</h3>
+            <p>{{ health_count }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Breeding Records</h3>
+            <p>{{ breeding_count }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Production Records</h3>
+            <p>{{ production_count }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Vet Visits</h3>
+            <p>{{ vet_visit_count }}</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     BREEDING SUMMARY
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Breeding Summary
+    </div>
+
+    <div class="report-grid">
+
+        <div class="report-box">
+            <h3>Planned</h3>
+            <p>{{ planned_breeding }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Pregnant</h3>
+            <p>{{ pregnant_count }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Successful</h3>
+            <p>{{ successful_breeding }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Failed</h3>
+            <p>{{ failed_breeding }}</p>
+        </div>
+
+        <div class="report-box">
+            <h3>Births Recorded</h3>
+            <p>{{ births_recorded }}</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     PRODUCTION SUMMARY
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Production Summary
+    </div>
+
+    <div class="card-grid">
+
+        <div class="report-card">
+            <div class="card-title">Total Milk</div>
+            <div class="card-value">
+                {{ total_milk|floatformat:2 }}
+            </div>
+            <div class="card-subtitle">
+                Total recorded milk
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Total Meat</div>
+            <div class="card-value">
+                {{ total_meat|floatformat:2 }}
+            </div>
+            <div class="card-subtitle">
+                Total recorded meat
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Weight Records</div>
+            <div class="card-value">
+                {{ total_weight_records }}
+            </div>
+            <div class="card-subtitle">
+                Recorded weight entries
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Total Offspring</div>
+            <div class="card-value">
+                {{ total_offspring }}
+            </div>
+            <div class="card-subtitle">
+                Recorded offspring
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     FINANCE SUMMARY
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Financial Summary
+    </div>
+
+    <div class="card-grid">
+
+        <div class="report-card">
+            <div class="card-title">Total Income</div>
+            <div class="card-value">
+                KSh {{ total_income|floatformat:2 }}
+            </div>
+            <div class="card-subtitle">
+                All recorded income
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Total Expenses</div>
+            <div class="card-value">
+                KSh {{ total_expenses|floatformat:2 }}
+            </div>
+            <div class="card-subtitle">
+                All recorded expenses
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Net Profit</div>
+            <div class="card-value">
+                KSh {{ net_profit|floatformat:2 }}
+            </div>
+            <div class="card-subtitle">
+                Income minus expenses
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="card-title">Health Records</div>
+            <div class="card-value">
+                {{ health_count }}
+            </div>
+            <div class="card-subtitle">
+                Health activity recorded
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     ANALYTICS CHARTS
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Farm Analytics
+    </div>
+
+    <div class="analytics-grid">
+
+        <div class="chart-card">
+
+            <h3>Herd Composition</h3>
+
+            <p>
+                Distribution of livestock by species
+            </p>
+
+            <div class="chart-container">
+                <canvas id="speciesChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <h3>Health Records</h3>
+
+            <p>
+                Breakdown of recorded health activities
+            </p>
+
+            <div class="chart-container">
+                <canvas id="healthChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <h3>Breeding Status</h3>
+
+            <p>
+                Current distribution of breeding records
+            </p>
+
+            <div class="chart-container">
+                <canvas id="breedingChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <h3>12-Month Production Trend</h3>
+
+            <p>
+                Monthly milk, meat and weight production records
+            </p>
+
+            <div class="chart-container">
+                <canvas id="productionChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <div class="chart-card full-chart">
+
+            <h3>12-Month Financial Performance</h3>
+
+            <p>
+                Monthly income compared with farm expenses
+            </p>
+
+            <div class="chart-container">
+                <canvas id="financeChart"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     ANIMAL PERFORMANCE
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Animal Performance
+    </div>
+
+    <div class="performance-grid">
+
+        <!-- TOP MILK PRODUCERS -->
+
+        <div class="performance-card">
+
+            <h3>🥛 Top Milk Producers</h3>
+
+            <p>
+                Animals with the highest total recorded milk production.
+            </p>
+
+            {% if top_milk_producers %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Animal</th>
+                        <th>Species</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in top_milk_producers %}
+
+                    <tr>
+
+                        <td class="rank">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+                            <a
+                                href="{% url 'animal_detail' item.animal.animal_id %}"
+                                class="performance-animal"
+                            >
+                                {{ item.animal.animal_id }}
+                            </a>
+                        </td>
+
+                        <td>
+                            <span class="species-badge">
+                                {{ item.animal.get_species_display }}
+                            </span>
+                        </td>
+
+                        <td class="performance-value">
+                            {{ item.total|floatformat:2 }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+                No milk production records available.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- TOP MEAT PRODUCERS -->
+
+        <div class="performance-card">
+
+            <h3>🥩 Top Meat Producers</h3>
+
+            <p>
+                Animals with the highest total recorded meat production.
+            </p>
+
+            {% if top_meat_producers %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Animal</th>
+                        <th>Species</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in top_meat_producers %}
+
+                    <tr>
+
+                        <td class="rank">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+                            <a
+                                href="{% url 'animal_detail' item.animal.animal_id %}"
+                                class="performance-animal"
+                            >
+                                {{ item.animal.animal_id }}
+                            </a>
+                        </td>
+
+                        <td>
+                            <span class="species-badge">
+                                {{ item.animal.get_species_display }}
+                            </span>
+                        </td>
+
+                        <td class="performance-value">
+                            {{ item.total|floatformat:2 }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+                No meat production records available.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- MOST ACTIVE ANIMALS -->
+
+        <div class="performance-card">
+
+            <h3>📊 Most Active Production Animals</h3>
+
+            <p>
+                Animals with the highest number of production records.
+            </p>
+
+            {% if top_active_animals %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Animal</th>
+                        <th>Species</th>
+                        <th>Records</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in top_active_animals %}
+
+                    <tr>
+
+                        <td class="rank">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+                            <a
+                                href="{% url 'animal_detail' item.animal.animal_id %}"
+                                class="performance-animal"
+                            >
+                                {{ item.animal.animal_id }}
+                            </a>
+                        </td>
+
+                        <td>
+                            <span class="species-badge">
+                                {{ item.animal.get_species_display }}
+                            </span>
+                        </td>
+
+                        <td class="performance-value">
+                            {{ item.record_count }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+                No production activity available.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     ANIMAL PROFITABILITY
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Animal Profitability
+    </div>
+
+    <div class="performance-grid">
+
+        <!-- MOST PROFITABLE -->
+
+        <div class="performance-card">
+
+            <h3>💰 Most Profitable Animals</h3>
+
+            <p>
+                Animals generating the highest recorded net profit.
+            </p>
+
+            {% if top_profitable_animals %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Animal</th>
+                        <th>Species</th>
+                        <th>Income</th>
+                        <th>Expenses</th>
+                        <th>Profit</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in top_profitable_animals %}
+
+                    <tr>
+
+                        <td class="rank">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+                            <a
+                                href="{% url 'animal_detail' item.animal.animal_id %}"
+                                class="performance-animal"
+                            >
+                                {{ item.animal.animal_id }}
+                            </a>
+                        </td>
+
+                        <td>
+                            <span class="species-badge">
+                                {{ item.animal.get_species_display }}
+                            </span>
+                        </td>
+
+                        <td>
+                            KSh {{ item.total_income|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            KSh {{ item.total_expenses|floatformat:2 }}
+                        </td>
+
+                        <td class="profit-positive">
+                            KSh {{ item.profit|floatformat:2 }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+                No animal-linked financial records available.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- LOWEST PROFIT -->
+
+        <div class="performance-card">
+
+            <h3>📉 Lowest Profit Animals</h3>
+
+            <p>
+                Animals with the lowest recorded net financial value.
+            </p>
+
+            {% if least_profitable_animals %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Animal</th>
+                        <th>Species</th>
+                        <th>Income</th>
+                        <th>Expenses</th>
+                        <th>Profit</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in least_profitable_animals %}
+
+                    <tr>
+
+                        <td class="rank">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+                            <a
+                                href="{% url 'animal_detail' item.animal.animal_id %}"
+                                class="performance-animal"
+                            >
+                                {{ item.animal.animal_id }}
+                            </a>
+                        </td>
+
+                        <td>
+                            <span class="species-badge">
+                                {{ item.animal.get_species_display }}
+                            </span>
+                        </td>
+
+                        <td>
+                            KSh {{ item.total_income|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            KSh {{ item.total_expenses|floatformat:2 }}
+                        </td>
+
+                        {% if item.profit >= 0 %}
+
+                        <td class="profit-positive">
+                            KSh {{ item.profit|floatformat:2 }}
+                        </td>
+
+                        {% else %}
+
+                        <td class="profit-negative">
+                            KSh {{ item.profit|floatformat:2 }}
+                        </td>
+
+                        {% endif %}
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+                No animal-linked financial records available.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     RECENT PRODUCTION
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Recent Production Records
+    </div>
+
+    <div class="table-card">
+
+        {% if recent_production %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Date</th>
+                    <th>Animal</th>
+                    <th>Production Type</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for record in recent_production %}
+
+                <tr>
+
+                    <td>
+                        {{ record.date }}
+                    </td>
+
+                    <td>
+                        <a
+                            href="{% url 'animal_detail' record.animal.animal_id %}"
+                            class="animal-link"
+                        >
+                            {{ record.animal.animal_id }}
+                        </a>
+                    </td>
+
+                    <td>
+                        {{ record.get_production_type_display }}
+                    </td>
+
+                    <td>
+                        {{ record.quantity|floatformat:2 }}
+                    </td>
+
+                    <td>
+                        {{ record.unit }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+            No production records available.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     RECENT HEALTH
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Recent Health Records
+    </div>
+
+    <div class="table-card">
+
+        {% if recent_health %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Date</th>
+                    <th>Animal</th>
+                    <th>Record Type</th>
+                    <th>Description</th>
+                    <th>Medication</th>
+                    <th>Veterinarian</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for record in recent_health %}
+
+                <tr>
+
+                    <td>
+                        {{ record.date }}
+                    </td>
+
+                    <td>
+                        <a
+                            href="{% url 'animal_detail' record.animal.animal_id %}"
+                            class="animal-link"
+                        >
+                            {{ record.animal.animal_id }}
+                        </a>
+                    </td>
+
+                    <td>
+                        {{ record.get_record_type_display }}
+                    </td>
+
+                    <td>
+                        {{ record.description }}
+                    </td>
+
+                    <td>
+                        {{ record.medication|default:"—" }}
+                    </td>
+
+                    <td>
+                        {{ record.veterinarian|default:"—" }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+            No health records available.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================
+     RECENT BREEDING
+======================================================== -->
+
+<div class="report-section">
+
+    <div class="section-title">
+        Recent Breeding Records
+    </div>
+
+    <div class="table-card">
+
+        {% if recent_breeding %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Breeding Date</th>
+                    <th>Female</th>
+                    <th>Male</th>
+                    <th>Status</th>
+                    <th>Expected Birth</th>
+                    <th>Offspring</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for record in recent_breeding %}
+
+                <tr>
+
+                    <td>
+                        {{ record.breeding_date }}
+                    </td>
+
+                    <td>
+                        <a
+                            href="{% url 'animal_detail' record.female.animal_id %}"
+                            class="animal-link"
+                        >
+                            {{ record.female.animal_id }}
+                        </a>
+                    </td>
+
+                    <td>
+
+                        {% if record.male %}
+
+                        <a
+                            href="{% url 'animal_detail' record.male.animal_id %}"
+                            class="animal-link"
+                        >
+                            {{ record.male.animal_id }}
+                        </a>
+
+                        {% else %}
+
+                        —
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <span class="status">
+                            {{ record.get_status_display }}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        {{ record.expected_birth_date|default:"—" }}
+                    </td>
+
+                    <td>
+                        {{ record.offspring_count }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+            No breeding records available.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ species_labels|json_script:"species-labels" }}
+{{ species_values|json_script:"species-values" }}
+
+{{ health_labels|json_script:"health-labels" }}
+{{ health_values|json_script:"health-values" }}
+
+{{ breeding_labels|json_script:"breeding-labels" }}
+{{ breeding_values|json_script:"breeding-values" }}
+
+{{ monthly_labels|json_script:"monthly-labels" }}
+{{ monthly_milk|json_script:"monthly-milk" }}
+{{ monthly_meat|json_script:"monthly-meat" }}
+{{ monthly_weight|json_script:"monthly-weight" }}
+
+{{ monthly_income|json_script:"monthly-income" }}
+{{ monthly_expenses|json_script:"monthly-expenses" }}
+
+
+<script>
+
+    /* ==========================
+       LOAD DJANGO DATA
+    ========================== */
+
+    const speciesLabels =
+        JSON.parse(
+            document.getElementById('species-labels').textContent
+        );
+
+    const speciesValues =
+        JSON.parse(
+            document.getElementById('species-values').textContent
+        );
+
+
+    const healthLabels =
+        JSON.parse(
+            document.getElementById('health-labels').textContent
+        );
+
+    const healthValues =
+        JSON.parse(
+            document.getElementById('health-values').textContent
+        );
+
+
+    const breedingLabels =
+        JSON.parse(
+            document.getElementById('breeding-labels').textContent
+        );
+
+    const breedingValues =
+        JSON.parse(
+            document.getElementById('breeding-values').textContent
+        );
+
+
+    const monthlyLabels =
+        JSON.parse(
+            document.getElementById('monthly-labels').textContent
+        );
+
+    const monthlyMilk =
+        JSON.parse(
+            document.getElementById('monthly-milk').textContent
+        );
+
+    const monthlyMeat =
+        JSON.parse(
+            document.getElementById('monthly-meat').textContent
+        );
+
+    const monthlyWeight =
+        JSON.parse(
+            document.getElementById('monthly-weight').textContent
+        );
+
+
+    const monthlyIncome =
+        JSON.parse(
+            document.getElementById('monthly-income').textContent
+        );
+
+    const monthlyExpenses =
+        JSON.parse(
+            document.getElementById('monthly-expenses').textContent
+        );
+
+
+    /* ==========================
+       DEFAULT CHART SETTINGS
+    ========================== */
+
+    Chart.defaults.font.family =
+        "Arial, sans-serif";
+
+    Chart.defaults.plugins.legend.position =
+        "bottom";
+
+
+    /* ==========================
+       HERD COMPOSITION
+    ========================== */
+
+    new Chart(
+        document.getElementById('speciesChart'),
+        {
+            type: 'doughnut',
+
+            data: {
+                labels: speciesLabels,
+
+                datasets: [
+                    {
+                        data: speciesValues,
+                        borderWidth: 2
+                    }
+                ]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        position: 'bottom'
+                    }
+
+                }
+            }
+        }
+    );
+
+
+    /* ==========================
+       HEALTH RECORDS
+    ========================== */
+
+    new Chart(
+        document.getElementById('healthChart'),
+        {
+            type: 'bar',
+
+            data: {
+
+                labels: healthLabels,
+
+                datasets: [
+                    {
+                        label: 'Records',
+
+                        data: healthValues,
+
+                        borderWidth: 1
+                    }
+                ]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            precision: 0
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    }
+
+                }
+            }
+        }
+    );
+
+
+    /* ==========================
+       BREEDING STATUS
+    ========================== */
+
+    new Chart(
+        document.getElementById('breedingChart'),
+        {
+            type: 'bar',
+
+            data: {
+
+                labels: breedingLabels,
+
+                datasets: [
+                    {
+                        label: 'Breeding Records',
+
+                        data: breedingValues,
+
+                        borderWidth: 1
+                    }
+                ]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            precision: 0
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    }
+
+                }
+            }
+        }
+    );
+
+
+    /* ==========================
+       PRODUCTION TREND
+    ========================== */
+
+    new Chart(
+        document.getElementById('productionChart'),
+        {
+            type: 'line',
+
+            data: {
+
+                labels: monthlyLabels,
+
+                datasets: [
+
+                    {
+                        label: 'Milk',
+
+                        data: monthlyMilk,
+
+                        borderWidth: 3,
+
+                        tension: 0.3,
+
+                        fill: false
+                    },
+
+                    {
+                        label: 'Meat',
+
+                        data: monthlyMeat,
+
+                        borderWidth: 3,
+
+                        tension: 0.3,
+
+                        fill: false
+                    },
+
+                    {
+                        label: 'Weight',
+
+                        data: monthlyWeight,
+
+                        borderWidth: 3,
+
+                        tension: 0.3,
+
+                        fill: false
+                    }
+
+                ]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                interaction: {
+
+                    intersect: false,
+
+                    mode: 'index'
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true
+
+                    }
+
+                }
+
+            }
+        }
+    );
+
+
+    /* ==========================
+       FINANCIAL PERFORMANCE
+    ========================== */
+
+    new Chart(
+        document.getElementById('financeChart'),
+        {
+            type: 'bar',
+
+            data: {
+
+                labels: monthlyLabels,
+
+                datasets: [
+
+                    {
+                        label: 'Income',
+
+                        data: monthlyIncome,
+
+                        borderWidth: 1
+                    },
+
+                    {
+                        label: 'Expenses',
+
+                        data: monthlyExpenses,
+
+                        borderWidth: 1
+                    }
+
+                ]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                interaction: {
+
+                    intersect: false,
+
+                    mode: 'index'
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            callback: function(value) {
+
+                                return 'KSh ' +
+                                    Number(value).toLocaleString();
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+    );
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,375 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Edit Health Record - {{ farm.farm_name|default:"WAHOME HERD" }}{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        color: #1b5e20;
+        font-size: 30px;
+    }
+
+    .page-header p {
+        margin-top: 8px;
+        color: #666;
+    }
+
+    .form-card {
+        max-width: 850px;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .animal-info {
+        background: #f1f8e9;
+        border-left: 5px solid #2e7d32;
+        padding: 15px 18px;
+        margin-bottom: 25px;
+        border-radius: 5px;
+    }
+
+    .animal-info strong {
+        color: #1b5e20;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 11px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+    }
+
+    .form-group textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #2e7d32;
+        box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.1);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .button-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 11px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background: #2e7d32;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #1b5e20;
+    }
+
+    .btn-secondary {
+        background: #eeeeee;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #dddddd;
+    }
+
+    .required {
+        color: #c62828;
+    }
+
+    @media (max-width: 700px) {
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .form-card {
+            padding: 20px;
+        }
+
+        .button-row {
+            flex-direction: column;
+        }
+
+        .btn {
+            text-align: center;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>✏️ Edit Health Record</h1>
+
+    <p>
+        Update the health record for
+        <strong>{{ animal.animal_id }}</strong>.
+    </p>
+
+</div>
+
+
+<div class="form-card">
+
+    <div class="animal-info">
+
+        <strong>Animal:</strong>
+        {{ animal.animal_id }}
+
+        {% if animal.species %}
+            &nbsp; | &nbsp;
+            <strong>Species:</strong>
+            {{ animal.get_species_display }}
+        {% endif %}
+
+        {% if animal.breed %}
+            &nbsp; | &nbsp;
+            <strong>Breed:</strong>
+            {{ animal.breed }}
+        {% endif %}
+
+    </div>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label for="record_type">
+                    Record Type <span class="required">*</span>
+                </label>
+
+                <select
+                    name="record_type"
+                    id="record_type"
+                    required
+                >
+
+                    <option value="">
+                        Select record type
+                    </option>
+
+                    <option
+                        value="VACCINATION"
+                        {% if record.record_type == 'VACCINATION' %}selected{% endif %}
+                    >
+                        Vaccination
+                    </option>
+
+                    <option
+                        value="TREATMENT"
+                        {% if record.record_type == 'TREATMENT' %}selected{% endif %}
+                    >
+                        Treatment
+                    </option>
+
+                    <option
+                        value="ILLNESS"
+                        {% if record.record_type == 'ILLNESS' %}selected{% endif %}
+                    >
+                        Illness
+                    </option>
+
+                    <option
+                        value="VET_VISIT"
+                        {% if record.record_type == 'VET_VISIT' %}selected{% endif %}
+                    >
+                        Veterinary Visit
+                    </option>
+
+                    <option
+                        value="OTHER"
+                        {% if record.record_type == 'OTHER' %}selected{% endif %}
+                    >
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="date">
+                    Date <span class="required">*</span>
+                </label>
+
+                <input
+                    type="date"
+                    name="date"
+                    id="date"
+                    value="{{ record.date|date:'Y-m-d' }}"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label for="next_due_date">
+                    Next Due Date
+                </label>
+
+                <input
+                    type="date"
+                    name="next_due_date"
+                    id="next_due_date"
+                    value="{{ record.next_due_date|date:'Y-m-d' }}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="veterinarian">
+                    Veterinarian
+                </label>
+
+                <input
+                    type="text"
+                    name="veterinarian"
+                    id="veterinarian"
+                    value="{{ record.veterinarian }}"
+                    placeholder="Enter veterinarian name"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="description">
+                Description <span class="required">*</span>
+            </label>
+
+            <textarea
+                name="description"
+                id="description"
+                required
+                placeholder="Describe the health issue, treatment, vaccination, visit, etc."
+            >{{ record.description }}</textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="medication">
+                Medication
+            </label>
+
+            <input
+                type="text"
+                name="medication"
+                id="medication"
+                value="{{ record.medication }}"
+                placeholder="Enter medication used"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="notes">
+                Notes
+            </label>
+
+            <textarea
+                name="notes"
+                id="notes"
+                placeholder="Additional notes"
+            >{{ record.notes }}</textarea>
+
+        </div>
+
+
+        <div class="button-row">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                💾 Save Changes
+            </button>
+
+            <a
+                href="{% url 'health_records' animal_id=animal.animal_id %}"
+                class="btn btn-secondary"
+            >
+                ← Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

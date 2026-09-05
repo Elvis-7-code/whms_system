@@ -1,0 +1,272 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Add Health Record - {{ animal.animal_id }} - WAHOME HERD{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>➕ Add Health Record</h1>
+
+    <p>
+        Add a health record for
+        <strong>{{ animal.animal_id }}</strong>
+    </p>
+
+</div>
+
+
+<div class="card" style="max-width:800px;">
+
+    <form method="post">
+
+        {% csrf_token %}
+
+
+        <!-- RECORD TYPE -->
+
+        <div style="margin-bottom:18px;">
+
+            <label>
+                <strong>Record Type</strong>
+            </label>
+
+            <select
+                name="record_type"
+                required
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+
+                <option value="">
+                    Select record type
+                </option>
+
+                <option value="VACCINATION">
+                    Vaccination
+                </option>
+
+                <option value="TREATMENT">
+                    Treatment
+                </option>
+
+                <option value="ILLNESS">
+                    Illness
+                </option>
+
+                <option value="VET_VISIT">
+                    Veterinary Visit
+                </option>
+
+                <option value="OTHER">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- DATE -->
+
+        <div style="margin-bottom:18px;">
+
+            <label>
+                <strong>Date</strong>
+            </label>
+
+            <input
+                type="date"
+                name="date"
+                required
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+
+        </div>
+
+
+        <!-- NEXT DUE DATE -->
+
+        <div style="margin-bottom:18px;">
+
+            <label>
+                <strong>Next Due Date</strong>
+            </label>
+
+            <input
+                type="date"
+                name="next_due_date"
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+
+            <small style="
+                display:block;
+                margin-top:6px;
+                color:#666;
+            ">
+                For vaccinations, treatments, or other scheduled follow-ups.
+            </small>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div style="margin-bottom:18px;">
+
+            <label>
+                <strong>Description</strong>
+            </label>
+
+            <textarea
+                name="description"
+                rows="4"
+                required
+                placeholder="Describe the health issue, treatment, vaccination, or veterinary visit..."
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                    resize:vertical;
+                "
+            ></textarea>
+
+        </div>
+
+
+        <!-- MEDICATION -->
+
+        <div style="margin-bottom:18px;">
+
+            <label>
+                <strong>Medication</strong>
+            </label>
+
+            <input
+                type="text"
+                name="medication"
+                placeholder="e.g. Antibiotics, dewormer, vaccine..."
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+
+        </div>
+
+
+        <!-- VETERINARIAN -->
+
+        <div style="margin-bottom:18px;">
+
+            <label>
+                <strong>Veterinarian</strong>
+            </label>
+
+            <input
+                type="text"
+                name="veterinarian"
+                placeholder="Veterinarian name"
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+
+        </div>
+
+
+        <!-- NOTES -->
+
+        <div style="margin-bottom:25px;">
+
+            <label>
+                <strong>Notes</strong>
+            </label>
+
+            <textarea
+                name="notes"
+                rows="4"
+                placeholder="Additional notes..."
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                    resize:vertical;
+                "
+            ></textarea>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div style="
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        ">
+
+            <button
+                type="submit"
+                style="
+                    background:#1b5e20;
+                    color:white;
+                    border:none;
+                    padding:12px 20px;
+                    border-radius:6px;
+                    cursor:pointer;
+                    font-weight:bold;
+                "
+            >
+                💾 Save Health Record
+            </button>
+
+
+            <a
+                href="{% url 'health_records' animal.animal_id %}"
+                style="
+                    background:#e0e0e0;
+                    color:#333;
+                    padding:12px 20px;
+                    border-radius:6px;
+                    text-decoration:none;
+                "
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

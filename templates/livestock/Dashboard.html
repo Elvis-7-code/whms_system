@@ -1,0 +1,3021 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Dashboard - WAHOME HERD{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+        --green-dark: #14532d;
+        --green: #166534;
+        --green-mid: #16a34a;
+        --green-light: #dcfce7;
+        --green-pale: #f0fdf4;
+
+        --text-dark: #1f2937;
+        --text-muted: #6b7280;
+        --border: #e5e7eb;
+        --background: #f8fafc;
+        --white: #ffffff;
+
+        --danger: #dc2626;
+        --danger-light: #fef2f2;
+
+        --warning: #d97706;
+        --warning-light: #fffbeb;
+
+        --blue: #2563eb;
+        --blue-light: #eff6ff;
+
+        --purple: #7c3aed;
+        --purple-light: #f5f3ff;
+
+        --shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+        --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .dashboard-page {
+        width: 100%;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .dashboard-title-area h1 {
+        margin: 0;
+        color: var(--green-dark);
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: -0.6px;
+    }
+
+    .dashboard-title-area p {
+        margin: 7px 0 0;
+        color: var(--text-muted);
+        font-size: 15px;
+    }
+
+    .dashboard-date {
+        padding: 11px 16px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        color: var(--text-muted);
+        font-size: 13px;
+        white-space: nowrap;
+        box-shadow: var(--shadow);
+    }
+
+    /* =========================================================
+       QUICK ACTIONS
+    ========================================================= */
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .quick-action {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 16px 18px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        color: var(--text-dark);
+        text-decoration: none;
+        box-shadow: var(--shadow);
+        transition: all 0.2s ease;
+    }
+
+    .quick-action:hover {
+        transform: translateY(-3px);
+        border-color: #bbf7d0;
+        box-shadow: var(--shadow-hover);
+        color: var(--green);
+    }
+
+    .quick-action-icon {
+        width: 43px;
+        height: 43px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: var(--green-light);
+        border-radius: 11px;
+        font-size: 21px;
+    }
+
+    .quick-action-text strong {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--text-dark);
+        font-size: 14px;
+    }
+
+    .quick-action-text span {
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    /* =========================================================
+       ALERT SUMMARY
+    ========================================================= */
+
+    .alert-summary {
+        margin-bottom: 25px;
+        padding: 22px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+    }
+
+    .alert-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 17px;
+    }
+
+    .alert-header h2 {
+        margin: 0;
+        color: var(--text-dark);
+        font-size: 20px;
+    }
+
+    .alert-count {
+        padding: 6px 12px;
+        background: var(--green);
+        color: white;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .alert-overview {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .alert-mini {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+    }
+
+    .alert-mini strong {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 1px;
+    }
+
+    .alert-mini span {
+        color: var(--text-muted);
+        font-size: 11px;
+    }
+
+    .alert-mini.overdue {
+        background: var(--danger-light);
+    }
+
+    .alert-mini.warning {
+        background: var(--warning-light);
+    }
+
+    .alert-mini.health {
+        background: var(--blue-light);
+    }
+
+    .alert-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .alert-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border-left: 5px solid;
+        border-radius: 10px;
+    }
+
+    .alert-item.danger {
+        background: var(--danger-light);
+        border-left-color: var(--danger);
+    }
+
+    .alert-item.warning {
+        background: var(--warning-light);
+        border-left-color: #f59e0b;
+    }
+
+    .alert-item.health {
+        background: var(--blue-light);
+        border-left-color: var(--blue);
+    }
+
+    .alert-item.info {
+        background: var(--green-pale);
+        border-left-color: var(--green-mid);
+    }
+
+    .alert-icon {
+        min-width: 32px;
+        text-align: center;
+        font-size: 23px;
+    }
+
+    .alert-content {
+        flex: 1;
+    }
+
+    .alert-title {
+        margin-bottom: 3px;
+        color: var(--text-dark);
+        font-weight: 700;
+    }
+
+    .alert-message {
+        color: #4b5563;
+        font-size: 14px;
+    }
+
+    .alert-date {
+        color: var(--text-muted);
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .no-alerts {
+        padding: 30px;
+        background: var(--green-pale);
+        border: 1px solid #dcfce7;
+        border-radius: 10px;
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    .no-alerts-icon {
+        margin-bottom: 8px;
+        font-size: 34px;
+    }
+
+    .no-alerts strong {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--green-dark);
+    }
+
+    /* =========================================================
+       KPI CARDS
+    ========================================================= */
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        position: relative;
+        overflow: hidden;
+        padding: 20px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .stat-card::after {
+        content: "";
+        position: absolute;
+        width: 90px;
+        height: 90px;
+        right: -35px;
+        bottom: -35px;
+        background: rgba(22, 101, 52, 0.04);
+        border-radius: 50%;
+    }
+
+    .stat-card h3 {
+        margin: 0 0 9px;
+        color: var(--text-muted);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .stat-value {
+        position: relative;
+        z-index: 1;
+        color: var(--text-dark);
+        font-size: 29px;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .stat-description {
+        position: relative;
+        z-index: 1;
+        margin-top: 7px;
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    .stat-green {
+        border-top: 4px solid var(--green);
+    }
+
+    .stat-blue {
+        border-top: 4px solid var(--blue);
+    }
+
+    .stat-orange {
+        border-top: 4px solid var(--warning);
+    }
+
+    .stat-red {
+        border-top: 4px solid var(--danger);
+    }
+
+    .stat-purple {
+        border-top: 4px solid var(--purple);
+    }
+
+    /* =========================================================
+       SECTION
+    ========================================================= */
+
+    .section {
+        margin-bottom: 25px;
+        padding: 22px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+        margin: 0;
+        color: var(--text-dark);
+        font-size: 20px;
+        font-weight: 750;
+    }
+
+    .section-subtitle {
+        margin: 5px 0 0;
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+
+    .section-link {
+        color: var(--green);
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .section-link:hover {
+        color: var(--green-dark);
+        text-decoration: underline;
+    }
+
+    /* =========================================================
+       CHART GRID
+    ========================================================= */
+
+    .chart-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+        margin-bottom: 25px;
+    }
+
+    .chart-grid.equal {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chart-card {
+        min-width: 0;
+        padding: 22px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+    }
+
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+    .chart-header h2 {
+        margin: 0;
+        color: var(--text-dark);
+        font-size: 19px;
+    }
+
+    .chart-header p {
+        margin: 5px 0 0;
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 300px;
+    }
+
+    .chart-container.small {
+        height: 270px;
+    }
+
+    /* =========================================================
+       PERFORMANCE CARDS
+    ========================================================= */
+
+    .performance-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .performance-card {
+        padding: 18px;
+        background: #f9fafb;
+        border: 1px solid #eef0f2;
+        border-radius: 12px;
+    }
+
+    .performance-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .performance-card-title {
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .performance-card-icon {
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--green-light);
+        border-radius: 9px;
+        font-size: 17px;
+    }
+
+    .performance-value {
+        color: var(--text-dark);
+        font-size: 24px;
+        font-weight: 800;
+    }
+
+    .performance-note {
+        margin-top: 4px;
+        color: var(--text-muted);
+        font-size: 11px;
+    }
+
+    /* =========================================================
+       PROGRESS
+    ========================================================= */
+
+    .progress-wrapper {
+        margin-top: 12px;
+    }
+
+    .progress-track {
+        width: 100%;
+        height: 8px;
+        overflow: hidden;
+        background: #e5e7eb;
+        border-radius: 20px;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--green);
+        border-radius: 20px;
+    }
+
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px;
+        color: var(--text-muted);
+        font-size: 11px;
+    }
+
+    /* =========================================================
+       TWO COLUMN LAYOUT
+    ========================================================= */
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+
+    /* =========================================================
+       INFO BOXES
+    ========================================================= */
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .info-box {
+        padding: 16px;
+        background: #f9fafb;
+        border: 1px solid #f0f0f0;
+        border-radius: 11px;
+        transition: background 0.2s ease;
+    }
+
+    .info-box:hover {
+        background: var(--green-pale);
+    }
+
+    .info-box strong {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--text-muted);
+        font-size: 12px;
+    }
+
+    .info-box span {
+        color: var(--text-dark);
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    /* =========================================================
+       TABLES
+    ========================================================= */
+
+    .table-container {
+        overflow-x: auto;
+        border: 1px solid #f0f0f0;
+        border-radius: 11px;
+    }
+
+    table {
+        width: 100%;
+        min-width: 600px;
+        border-collapse: collapse;
+    }
+
+    th {
+        padding: 13px 12px;
+        background: var(--green-pale);
+        border-bottom: 1px solid var(--border);
+        color: var(--green-dark);
+        font-size: 12px;
+        font-weight: 800;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    td {
+        padding: 13px 12px;
+        border-bottom: 1px solid #f0f0f0;
+        color: #374151;
+        font-size: 14px;
+    }
+
+    tbody tr {
+        transition: background 0.15s ease;
+    }
+
+    tbody tr:hover {
+        background: #f9fafb;
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .animal-link {
+        color: var(--green);
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .animal-link:hover {
+        color: var(--green-dark);
+        text-decoration: underline;
+    }
+
+    /* =========================================================
+       BADGES
+    ========================================================= */
+
+    .badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .badge-active {
+        background: var(--green-light);
+        color: var(--green-dark);
+    }
+
+    .badge-sold {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .badge-deceased {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    /* =========================================================
+       FINANCE
+    ========================================================= */
+
+    .money-value {
+        font-weight: 800;
+    }
+
+    .profit-positive {
+        color: #15803d;
+    }
+
+    .profit-negative {
+        color: #dc2626;
+    }
+
+    /* =========================================================
+       FARM INFORMATION
+    ========================================================= */
+
+    .farm-description {
+        margin-top: 18px;
+        padding: 17px;
+        background: var(--green-pale);
+        border: 1px solid #dcfce7;
+        border-radius: 11px;
+        color: #374151;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .farm-description strong {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--green-dark);
+    }
+
+    /* =========================================================
+       EMPTY TABLE
+    ========================================================= */
+
+    .empty-table {
+        padding: 30px !important;
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 1200px) {
+        .quick-actions {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .chart-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-grid.equal {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .performance-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .alert-overview {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .dashboard-date {
+            width: 100%;
+        }
+
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .alert-item {
+            align-items: flex-start;
+        }
+
+        .alert-date {
+            display: none;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section,
+        .chart-card {
+            padding: 17px;
+        }
+
+        .section-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .section-link {
+            font-size: 13px;
+        }
+
+        .chart-container {
+            height: 250px;
+        }
+    }
+
+    @media (max-width: 450px) {
+        .dashboard-title-area h1 {
+            font-size: 24px;
+        }
+
+        .alert-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .stat-card {
+            padding: 17px;
+        }
+
+        .stat-value {
+            font-size: 25px;
+        }
+
+        .chart-container {
+            height: 220px;
+        }
+    }
+</style>
+
+
+<div class="dashboard-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="dashboard-header">
+
+        <div class="dashboard-title-area">
+
+            <h1>
+                {% if farm and farm.farm_name %}
+                    {{ farm.farm_name }}
+                {% else %}
+                    WAHOME HERD
+                {% endif %}
+            </h1>
+
+            <p>
+                Farm Management Dashboard
+            </p>
+
+        </div>
+
+        <div class="dashboard-date">
+            📅 Farm Overview
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         QUICK ACTIONS
+    ====================================================== -->
+
+    <div class="quick-actions">
+
+        <a href="{% url 'add_animal' %}" class="quick-action">
+
+            <div class="quick-action-icon">
+                🐄
+            </div>
+
+            <div class="quick-action-text">
+                <strong>Add Animal</strong>
+                <span>Register new livestock</span>
+            </div>
+
+        </a>
+
+
+        <a href="{% url 'livestock_list' %}" class="quick-action">
+
+            <div class="quick-action-icon">
+                🩺
+            </div>
+
+            <div class="quick-action-text">
+                <strong>Health Record</strong>
+                <span>Select animal &amp; add health record</span>
+            </div>
+
+        </a>
+
+
+        <a href="{% url 'livestock_list' %}" class="quick-action">
+
+            <div class="quick-action-icon">
+                🥛
+            </div>
+
+            <div class="quick-action-text">
+                <strong>Production</strong>
+                <span>Select animal &amp; record production</span>
+            </div>
+
+        </a>
+
+
+        <a href="{% url 'add_financial_record' %}" class="quick-action">
+
+            <div class="quick-action-icon">
+                💰
+            </div>
+
+            <div class="quick-action-text">
+                <strong>Finance</strong>
+                <span>Add transaction</span>
+            </div>
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         ALERTS
+    ====================================================== -->
+
+    <div class="alert-summary">
+
+        <div class="alert-header">
+
+            <h2>
+                🔔 Alerts &amp; Notifications
+            </h2>
+
+            <span class="alert-count">
+                {{ alert_count }}
+                Alert{{ alert_count|pluralize }}
+            </span>
+
+        </div>
+
+
+        <div class="alert-overview">
+
+            <div class="alert-mini overdue">
+
+                <div>🚨</div>
+
+                <div>
+                    <strong>{{ overdue_alert_count }}</strong>
+                    <span>Overdue Alerts</span>
+                </div>
+
+            </div>
+
+
+            <div class="alert-mini warning">
+
+                <div>⚠️</div>
+
+                <div>
+                    <strong>{{ warning_alert_count }}</strong>
+                    <span>Warnings</span>
+                </div>
+
+            </div>
+
+
+            <div class="alert-mini health">
+
+                <div>🩺</div>
+
+                <div>
+                    <strong>{{ health_alert_count }}</strong>
+                    <span>Health Alerts</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% if alerts %}
+
+            <div class="alert-list">
+
+                {% for alert in alerts %}
+
+                    <div class="alert-item {{ alert.type }}">
+
+                        <div class="alert-icon">
+                            {{ alert.icon }}
+                        </div>
+
+                        <div class="alert-content">
+
+                            <div class="alert-title">
+                                {{ alert.title }}
+                            </div>
+
+                            <div class="alert-message">
+                                {{ alert.message }}
+                            </div>
+
+                        </div>
+
+                        {% if alert.date %}
+
+                            <div class="alert-date">
+                                {{ alert.date|date:"d M Y" }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="no-alerts">
+
+                <div class="no-alerts-icon">
+                    ✅
+                </div>
+
+                <strong>
+                    No alerts right now
+                </strong>
+
+                <div>
+                    Your farm currently has no outstanding notifications.
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         LIVESTOCK KPI
+    ====================================================== -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card stat-green">
+
+            <h3>🐄 Total Livestock</h3>
+
+            <div class="stat-value">
+                {{ total_livestock }}
+            </div>
+
+            <div class="stat-description">
+                Animals currently on the farm
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-blue">
+
+            <h3>🟢 Active Animals</h3>
+
+            <div class="stat-value">
+                {{ active_animals }}
+            </div>
+
+            <div class="stat-description">
+                {{ active_percentage|floatformat:1 }}% of all registered animals
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-orange">
+
+            <h3>💰 Sold</h3>
+
+            <div class="stat-value">
+                {{ sold_animals }}
+            </div>
+
+            <div class="stat-description">
+                Animals recorded as sold
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-red">
+
+            <h3>⚠️ Deceased</h3>
+
+            <div class="stat-value">
+                {{ deceased_animals }}
+            </div>
+
+            <div class="stat-description">
+                Deceased animals
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SPECIES KPI
+    ====================================================== -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card stat-green">
+
+            <h3>🐄 Cows</h3>
+
+            <div class="stat-value">
+                {{ total_cows }}
+            </div>
+
+            <div class="stat-description">
+                Active cattle
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-green">
+
+            <h3>🐐 Goats</h3>
+
+            <div class="stat-value">
+                {{ total_goats }}
+            </div>
+
+            <div class="stat-description">
+                Active goats
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-green">
+
+            <h3>🐑 Sheep</h3>
+
+            <div class="stat-value">
+                {{ total_sheep }}
+            </div>
+
+            <div class="stat-description">
+                Active sheep
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-purple">
+
+            <h3>⚖️ Average Weight</h3>
+
+            <div class="stat-value">
+
+                {% if average_weight %}
+                    {{ average_weight|floatformat:1 }}
+                {% else %}
+                    0
+                {% endif %}
+
+            </div>
+
+            <div class="stat-description">
+                Average recorded animal weight
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FINANCE KPI
+    ====================================================== -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card stat-green">
+
+            <h3>💵 Total Income</h3>
+
+            <div class="stat-value money-value">
+                KSh {{ total_income|floatformat:2 }}
+            </div>
+
+            <div class="stat-description">
+                Recorded farm income
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-red">
+
+            <h3>💸 Total Expenses</h3>
+
+            <div class="stat-value money-value">
+                KSh {{ total_expenses|floatformat:2 }}
+            </div>
+
+            <div class="stat-description">
+                Recorded farm expenses
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-blue">
+
+            <h3>📈 Net Profit / Loss</h3>
+
+            <div class="stat-value money-value
+                {% if net_profit >= 0 %}
+                    profit-positive
+                {% else %}
+                    profit-negative
+                {% endif %}
+            ">
+
+                KSh {{ net_profit|floatformat:2 }}
+
+            </div>
+
+            <div class="stat-description">
+                Income minus expenses
+            </div>
+
+        </div>
+
+
+        <div class="stat-card stat-purple">
+
+            <h3>🧾 Transactions</h3>
+
+            <div class="stat-value">
+                {{ income_count|add:expense_count }}
+            </div>
+
+            <div class="stat-description">
+                Income and expense records
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PRODUCTION TREND
+    ====================================================== -->
+
+    <div class="chart-card" style="margin-bottom: 25px;">
+
+        <div class="chart-header">
+
+            <div>
+
+                <h2>
+                    🥛 Production Trend
+                </h2>
+
+                <p>
+                    Production activity over the last 30 days
+                </p>
+
+            </div>
+
+            <a href="{% url 'all_production_records' %}"
+               class="section-link">
+
+                View Production →
+
+            </a>
+
+        </div>
+
+
+        <div class="chart-container">
+
+            <canvas id="productionTrendChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FINANCIAL TREND
+    ====================================================== -->
+
+    <div class="chart-grid equal">
+
+        <div class="chart-card">
+
+            <div class="chart-header">
+
+                <div>
+
+                    <h2>
+                        💰 Financial Performance
+                    </h2>
+
+                    <p>
+                        Income, expenses and profit over the last 6 months
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="financialTrendChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <div class="chart-header">
+
+                <div>
+
+                    <h2>
+                        🐄 Livestock Composition
+                    </h2>
+
+                    <p>
+                        Current active livestock by species
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="speciesChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         LIVESTOCK STATUS + SEX
+    ====================================================== -->
+
+    <div class="chart-grid equal">
+
+        <div class="chart-card">
+
+            <div class="chart-header">
+
+                <div>
+
+                    <h2>
+                        📊 Livestock Status
+                    </h2>
+
+                    <p>
+                        Distribution of registered animals
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container small">
+
+                <canvas id="livestockStatusChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <div class="chart-header">
+
+                <div>
+
+                    <h2>
+                        👥 Male vs Female
+                    </h2>
+
+                    <p>
+                        Sex distribution among active animals
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container small">
+
+                <canvas id="sexChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PERFORMANCE SUMMARY
+    ====================================================== -->
+
+    <div class="performance-grid">
+
+        <div class="performance-card">
+
+            <div class="performance-card-header">
+
+                <div class="performance-card-title">
+                    🐄 ACTIVE LIVESTOCK
+                </div>
+
+                <div class="performance-card-icon">
+                    🟢
+                </div>
+
+            </div>
+
+            <div class="performance-value">
+                {{ active_animals }}
+            </div>
+
+            <div class="performance-note">
+                {{ active_percentage|floatformat:1 }}% of registered livestock is active
+            </div>
+
+            <div class="progress-wrapper">
+
+                <div class="progress-label">
+                    <span>Active percentage</span>
+                    <span>{{ active_percentage|floatformat:1 }}%</span>
+                </div>
+
+                <div class="progress-track">
+
+                    <div class="progress-fill"
+                         style="width: {{ active_percentage|floatformat:0 }}%;">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="performance-card">
+
+            <div class="performance-card-header">
+
+                <div class="performance-card-title">
+                    🐑 BREEDING SUCCESS
+                </div>
+
+                <div class="performance-card-icon">
+                    🌱
+                </div>
+
+            </div>
+
+            <div class="performance-value">
+                {{ breeding_success_rate|floatformat:1 }}%
+            </div>
+
+            <div class="performance-note">
+                Successful breeding records compared with recorded breeding activity
+            </div>
+
+            <div class="progress-wrapper">
+
+                <div class="progress-label">
+                    <span>Success rate</span>
+                    <span>{{ breeding_success_rate|floatformat:1 }}%</span>
+                </div>
+
+                <div class="progress-track">
+
+                    <div class="progress-fill"
+                         style="width: {{ breeding_success_rate|floatformat:0 }}%;">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="performance-card">
+
+            <div class="performance-card-header">
+
+                <div class="performance-card-title">
+                    💰 NET POSITION
+                </div>
+
+                <div class="performance-card-icon">
+                    📈
+                </div>
+
+            </div>
+
+            <div class="performance-value
+                {% if net_profit >= 0 %}
+                    profit-positive
+                {% else %}
+                    profit-negative
+                {% endif %}
+            ">
+
+                KSh {{ net_profit|floatformat:2 }}
+
+            </div>
+
+            <div class="performance-note">
+                Current recorded financial position
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HEALTH & BREEDING
+    ====================================================== -->
+
+    <div class="dashboard-grid">
+
+        <!-- HEALTH -->
+
+        <div class="section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        🩺 Health Summary
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Overview of animal health records
+                    </p>
+
+                </div>
+
+                <a href="{% url 'all_health_records' %}"
+                   class="section-link">
+
+                    View Records →
+
+                </a>
+
+            </div>
+
+
+            <div class="info-grid">
+
+                <div class="info-box">
+
+                    <strong>
+                        Total Records
+                    </strong>
+
+                    <span>
+                        {{ health_count }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Vaccinations
+                    </strong>
+
+                    <span>
+                        {{ vaccination_count }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Treatments
+                    </strong>
+
+                    <span>
+                        {{ treatment_count }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Illnesses
+                    </strong>
+
+                    <span>
+                        {{ illness_count }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Vet Visits
+                    </strong>
+
+                    <span>
+                        {{ vet_visit_count }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BREEDING -->
+
+        <div class="section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        🐑 Breeding Summary
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Overview of breeding activity
+                    </p>
+
+                </div>
+
+                <a href="{% url 'all_breeding_records' %}"
+                   class="section-link">
+
+                    View Records →
+
+                </a>
+
+            </div>
+
+
+            <div class="info-grid">
+
+                <div class="info-box">
+
+                    <strong>
+                        Total Records
+                    </strong>
+
+                    <span>
+                        {{ breeding_count }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Planned
+                    </strong>
+
+                    <span>
+                        {{ planned_breeding }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Pregnant
+                    </strong>
+
+                    <span>
+                        {{ pregnant_count }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Successful
+                    </strong>
+
+                    <span>
+                        {{ successful_breeding }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Births
+                    </strong>
+
+                    <span>
+                        {{ births_recorded }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Offspring
+                    </strong>
+
+                    <span>
+                        {{ total_offspring }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT ANIMALS
+    ====================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    🐄 Recently Added Animals
+                </h2>
+
+                <p class="section-subtitle">
+                    Latest livestock registered in the system
+                </p>
+
+            </div>
+
+            <a href="{% url 'livestock_list' %}"
+               class="section-link">
+
+                View Livestock →
+
+            </a>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Animal ID</th>
+                        <th>Species</th>
+                        <th>Breed</th>
+                        <th>Sex</th>
+                        <th>Weight</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for animal in recent_animals %}
+
+                        <tr>
+
+                            <td>
+
+                                <a href="{% url 'animal_detail' animal.animal_id %}"
+                                   class="animal-link">
+
+                                    {{ animal.animal_id }}
+
+                                </a>
+
+                            </td>
+
+
+                            <td>
+                                {{ animal.get_species_display }}
+                            </td>
+
+
+                            <td>
+                                {{ animal.breed|default:"-" }}
+                            </td>
+
+
+                            <td>
+                                {{ animal.get_sex_display }}
+                            </td>
+
+
+                            <td>
+
+                                {% if animal.weight %}
+                                    {{ animal.weight }}
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if animal.status == 'ACTIVE' %}
+
+                                    <span class="badge badge-active">
+                                        Active
+                                    </span>
+
+                                {% elif animal.status == 'SOLD' %}
+
+                                    <span class="badge badge-sold">
+                                        Sold
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge badge-deceased">
+                                        Deceased
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="6"
+                                class="empty-table">
+
+                                No animals recorded yet.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT PRODUCTION
+    ====================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    🥛 Recent Production
+                </h2>
+
+                <p class="section-subtitle">
+                    Latest production records entered into the system
+                </p>
+
+            </div>
+
+            <a href="{% url 'all_production_records' %}"
+               class="section-link">
+
+                View Production →
+
+            </a>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Date</th>
+                        <th>Animal</th>
+                        <th>Type</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for record in recent_production %}
+
+                        <tr>
+
+                            <td>
+                                {{ record.date|date:"d M Y" }}
+                            </td>
+
+
+                            <td>
+
+                                <a href="{% url 'animal_detail' record.animal.animal_id %}"
+                                   class="animal-link">
+
+                                    {{ record.animal.animal_id }}
+
+                                </a>
+
+                            </td>
+
+
+                            <td>
+                                {{ record.get_production_type_display }}
+                            </td>
+
+
+                            <td>
+                                {{ record.quantity }}
+                            </td>
+
+
+                            <td>
+                                {{ record.unit|default:"-" }}
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="5"
+                                class="empty-table">
+
+                                No production records yet.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT HEALTH
+    ====================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    🩺 Recent Health Records
+                </h2>
+
+                <p class="section-subtitle">
+                    Latest health-related activities
+                </p>
+
+            </div>
+
+            <a href="{% url 'all_health_records' %}"
+               class="section-link">
+
+                View Health →
+
+            </a>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Date</th>
+                        <th>Animal</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for record in recent_health %}
+
+                        <tr>
+
+                            <td>
+                                {{ record.date|date:"d M Y" }}
+                            </td>
+
+
+                            <td>
+
+                                <a href="{% url 'animal_detail' record.animal.animal_id %}"
+                                   class="animal-link">
+
+                                    {{ record.animal.animal_id }}
+
+                                </a>
+
+                            </td>
+
+
+                            <td>
+                                {{ record.get_record_type_display }}
+                            </td>
+
+
+                            <td>
+                                {{ record.description|default:"-" }}
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="4"
+                                class="empty-table">
+
+                                No health records yet.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT BREEDING
+    ====================================================== -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    🐑 Recent Breeding
+                </h2>
+
+                <p class="section-subtitle">
+                    Latest breeding activities
+                </p>
+
+            </div>
+
+            <a href="{% url 'all_breeding_records' %}"
+               class="section-link">
+
+                View Breeding →
+
+            </a>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Breeding Date</th>
+                        <th>Female</th>
+                        <th>Male</th>
+                        <th>Expected Birth</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for record in recent_breeding %}
+
+                        <tr>
+
+                            <td>
+                                {{ record.breeding_date|date:"d M Y" }}
+                            </td>
+
+
+                            <td>
+
+                                <a href="{% url 'animal_detail' record.female.animal_id %}"
+                                   class="animal-link">
+
+                                    {{ record.female.animal_id }}
+
+                                </a>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if record.male %}
+
+                                    <a href="{% url 'animal_detail' record.male.animal_id %}"
+                                       class="animal-link">
+
+                                        {{ record.male.animal_id }}
+
+                                    </a>
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if record.expected_birth_date %}
+
+                                    {{ record.expected_birth_date|date:"d M Y" }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ record.get_status_display }}
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="5"
+                                class="empty-table">
+
+                                No breeding records yet.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FARM INFORMATION
+    ====================================================== -->
+
+    {% if farm %}
+
+        <div class="section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        🏡 Farm Information
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Basic farm details and configuration
+                    </p>
+
+                </div>
+
+                <a href="{% url 'farm_settings' %}"
+                   class="section-link">
+
+                    Farm Settings →
+
+                </a>
+
+            </div>
+
+
+            <div class="info-grid">
+
+                <div class="info-box">
+
+                    <strong>
+                        Farm Name
+                    </strong>
+
+                    <span>
+                        {{ farm.farm_name|default:"-" }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Location
+                    </strong>
+
+                    <span>
+                        {{ farm.location|default:"-" }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Owner
+                    </strong>
+
+                    <span>
+                        {{ farm.owner_name|default:"-" }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>
+                        Phone
+                    </strong>
+
+                    <span>
+                        {{ farm.phone|default:"-" }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            {% if farm.description %}
+
+                <div class="farm-description">
+
+                    <strong>
+                        About the Farm
+                    </strong>
+
+                    <div>
+                        {{ farm.description }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =========================================================
+     CHART.JS
+========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<!-- =========================================================
+     DASHBOARD CHARTS
+========================================================= -->
+
+{{ production_trend_labels|json_script:"production-labels" }}
+{{ production_trend_milk|json_script:"production-milk" }}
+{{ production_trend_meat|json_script:"production-meat" }}
+{{ production_trend_weight|json_script:"production-weight" }}
+
+{{ financial_trend_labels|json_script:"financial-labels" }}
+{{ financial_trend_income|json_script:"financial-income" }}
+{{ financial_trend_expenses|json_script:"financial-expenses" }}
+{{ financial_trend_profit|json_script:"financial-profit" }}
+
+{{ species_labels|json_script:"species-labels" }}
+{{ species_values|json_script:"species-values" }}
+
+{{ livestock_status_labels|json_script:"status-labels" }}
+{{ livestock_status_values|json_script:"status-values" }}
+
+{{ sex_labels|json_script:"sex-labels" }}
+{{ sex_values|json_script:"sex-values" }}
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /*
+        =========================================================
+        LOAD DJANGO DATA SAFELY
+        =========================================================
+        */
+
+        function getChartData(id) {
+
+            const element = document.getElementById(id);
+
+            if (!element) {
+                return [];
+            }
+
+            try {
+                return JSON.parse(element.textContent);
+            } catch (error) {
+                console.error("Unable to read chart data:", id, error);
+                return [];
+            }
+        }
+
+
+        const productionLabels =
+            getChartData("production-labels");
+
+        const productionMilk =
+            getChartData("production-milk");
+
+        const productionMeat =
+            getChartData("production-meat");
+
+        const productionWeight =
+            getChartData("production-weight");
+
+
+        const financialLabels =
+            getChartData("financial-labels");
+
+        const financialIncome =
+            getChartData("financial-income");
+
+        const financialExpenses =
+            getChartData("financial-expenses");
+
+        const financialProfit =
+            getChartData("financial-profit");
+
+
+        const speciesLabels =
+            getChartData("species-labels");
+
+        const speciesValues =
+            getChartData("species-values");
+
+
+        const statusLabels =
+            getChartData("status-labels");
+
+        const statusValues =
+            getChartData("status-values");
+
+
+        const sexLabels =
+            getChartData("sex-labels");
+
+        const sexValues =
+            getChartData("sex-values");
+
+
+        /*
+        =========================================================
+        GLOBAL CHART SETTINGS
+        =========================================================
+        */
+
+        Chart.defaults.font.family =
+            "Arial, sans-serif";
+
+        Chart.defaults.color =
+            "#6b7280";
+
+
+        /*
+        =========================================================
+        PRODUCTION TREND
+        =========================================================
+        */
+
+        const productionCanvas =
+            document.getElementById("productionTrendChart");
+
+
+        if (productionCanvas) {
+
+            new Chart(
+                productionCanvas,
+                {
+                    type: "line",
+
+                    data: {
+                        labels: productionLabels,
+
+                        datasets: [
+
+                            {
+                                label: "Milk",
+
+                                data: productionMilk,
+
+                                borderColor: "#166534",
+
+                                backgroundColor:
+                                    "rgba(22, 101, 52, 0.10)",
+
+                                borderWidth: 3,
+
+                                fill: true,
+
+                                tension: 0.35,
+
+                                pointRadius: 3,
+
+                                pointHoverRadius: 6
+                            },
+
+                            {
+                                label: "Meat",
+
+                                data: productionMeat,
+
+                                borderColor: "#dc2626",
+
+                                backgroundColor:
+                                    "rgba(220, 38, 38, 0.05)",
+
+                                borderWidth: 2,
+
+                                fill: false,
+
+                                tension: 0.35,
+
+                                pointRadius: 3,
+
+                                pointHoverRadius: 6
+                            },
+
+                            {
+                                label: "Weight",
+
+                                data: productionWeight,
+
+                                borderColor: "#2563eb",
+
+                                backgroundColor:
+                                    "rgba(37, 99, 235, 0.05)",
+
+                                borderWidth: 2,
+
+                                fill: false,
+
+                                tension: 0.35,
+
+                                pointRadius: 3,
+
+                                pointHoverRadius: 6
+                            }
+
+                        ]
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        interaction: {
+                            intersect: false,
+                            mode: "index"
+                        },
+
+                        plugins: {
+
+                            legend: {
+                                position: "top",
+
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 18
+                                }
+                            },
+
+                            tooltip: {
+                                backgroundColor: "#1f2937",
+                                padding: 12,
+                                cornerRadius: 8
+                            }
+
+                        },
+
+                        scales: {
+
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+
+                            y: {
+                                beginAtZero: true,
+
+                                grid: {
+                                    color:
+                                        "rgba(229, 231, 235, 0.7)"
+                                }
+                            }
+
+                        }
+                    }
+                }
+            );
+
+        }
+
+
+        /*
+        =========================================================
+        FINANCIAL TREND
+        =========================================================
+        */
+
+        const financialCanvas =
+            document.getElementById("financialTrendChart");
+
+
+        if (financialCanvas) {
+
+            new Chart(
+                financialCanvas,
+                {
+                    type: "bar",
+
+                    data: {
+                        labels: financialLabels,
+
+                        datasets: [
+
+                            {
+                                label: "Income",
+
+                                data: financialIncome,
+
+                                backgroundColor:
+                                    "rgba(22, 101, 52, 0.75)",
+
+                                borderRadius: 5
+                            },
+
+                            {
+                                label: "Expenses",
+
+                                data: financialExpenses,
+
+                                backgroundColor:
+                                    "rgba(220, 38, 38, 0.70)",
+
+                                borderRadius: 5
+                            },
+
+                            {
+                                type: "line",
+
+                                label: "Profit",
+
+                                data: financialProfit,
+
+                                borderColor: "#2563eb",
+
+                                backgroundColor:
+                                    "#2563eb",
+
+                                borderWidth: 3,
+
+                                tension: 0.3,
+
+                                pointRadius: 4,
+
+                                pointHoverRadius: 6
+
+                            }
+
+                        ]
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+                                position: "top",
+
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 16
+                                }
+                            },
+
+                            tooltip: {
+                                backgroundColor: "#1f2937",
+                                padding: 12,
+                                cornerRadius: 8
+                            }
+
+                        },
+
+                        scales: {
+
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+
+                            y: {
+                                beginAtZero: true,
+
+                                grid: {
+                                    color:
+                                        "rgba(229, 231, 235, 0.7)"
+                                },
+
+                                ticks: {
+
+                                    callback: function (value) {
+                                        return "KSh " +
+                                            Number(value).toLocaleString();
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+        }
+
+
+        /*
+        =========================================================
+        SPECIES DISTRIBUTION
+        =========================================================
+        */
+
+        const speciesCanvas =
+            document.getElementById("speciesChart");
+
+
+        if (speciesCanvas) {
+
+            new Chart(
+                speciesCanvas,
+                {
+                    type: "doughnut",
+
+                    data: {
+
+                        labels: speciesLabels,
+
+                        datasets: [
+
+                            {
+                                data: speciesValues,
+
+                                backgroundColor: [
+                                    "#166534",
+                                    "#d97706",
+                                    "#2563eb"
+                                ],
+
+                                borderWidth: 3,
+
+                                borderColor: "#ffffff",
+
+                                hoverOffset: 8
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        cutout: "62%",
+
+                        plugins: {
+
+                            legend: {
+                                position: "bottom",
+
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 18
+                                }
+                            },
+
+                            tooltip: {
+                                backgroundColor: "#1f2937",
+                                padding: 12,
+                                cornerRadius: 8
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+        }
+
+
+        /*
+        =========================================================
+        LIVESTOCK STATUS
+        =========================================================
+        */
+
+        const statusCanvas =
+            document.getElementById("livestockStatusChart");
+
+
+        if (statusCanvas) {
+
+            new Chart(
+                statusCanvas,
+                {
+                    type: "doughnut",
+
+                    data: {
+
+                        labels: statusLabels,
+
+                        datasets: [
+
+                            {
+                                data: statusValues,
+
+                                backgroundColor: [
+                                    "#16a34a",
+                                    "#d97706",
+                                    "#dc2626"
+                                ],
+
+                                borderWidth: 3,
+
+                                borderColor: "#ffffff",
+
+                                hoverOffset: 8
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        cutout: "60%",
+
+                        plugins: {
+
+                            legend: {
+                                position: "bottom",
+
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 15
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+        }
+
+
+        /*
+        =========================================================
+        SEX DISTRIBUTION
+        =========================================================
+        */
+
+        const sexCanvas =
+            document.getElementById("sexChart");
+
+
+        if (sexCanvas) {
+
+            new Chart(
+                sexCanvas,
+                {
+                    type: "doughnut",
+
+                    data: {
+
+                        labels: sexLabels,
+
+                        datasets: [
+
+                            {
+                                data: sexValues,
+
+                                backgroundColor: [
+                                    "#2563eb",
+                                    "#7c3aed"
+                                ],
+
+                                borderWidth: 3,
+
+                                borderColor: "#ffffff",
+
+                                hoverOffset: 8
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        cutout: "60%",
+
+                        plugins: {
+
+                            legend: {
+                                position: "bottom",
+
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 15
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,455 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Activity Log - WAHOME HERD{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        color: #1b5e20;
+        font-size: 30px;
+    }
+
+    .page-header p {
+        margin-top: 8px;
+        color: #666;
+    }
+
+    .summary-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .summary-card h3 {
+        margin: 0;
+        color: #555;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
+    .summary-number {
+        font-size: 28px;
+        font-weight: bold;
+        color: #1b5e20;
+        margin-top: 8px;
+    }
+
+    .filter-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .filter-card h3 {
+        margin-top: 0;
+        margin-bottom: 18px;
+        color: #333;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        align-items: end;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: 600;
+        color: #444;
+    }
+
+    .form-group select,
+    .form-group input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        background: white;
+    }
+
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 6px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background: #1b5e20;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #144d18;
+    }
+
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #d0d0d0;
+    }
+
+    .log-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .activity-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .activity-table th {
+        background: #1b5e20;
+        color: white;
+        padding: 13px 15px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .activity-table td {
+        padding: 14px 15px;
+        border-bottom: 1px solid #eee;
+        color: #444;
+        font-size: 14px;
+        vertical-align: top;
+    }
+
+    .activity-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .activity-table tr:hover {
+        background: #f8faf8;
+    }
+
+    .action-badge {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .action-create {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .action-update {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+
+    .action-delete {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .action-login {
+        background: #f3e5f5;
+        color: #7b1fa2;
+    }
+
+    .action-logout {
+        background: #fff3e0;
+        color: #ef6c00;
+    }
+
+    .action-other {
+        background: #eeeeee;
+        color: #555;
+    }
+
+    .username {
+        font-weight: 600;
+        color: #1b5e20;
+    }
+
+    .module {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .description {
+        max-width: 400px;
+        line-height: 1.5;
+    }
+
+    .date-time {
+        white-space: nowrap;
+        color: #666;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #777;
+    }
+
+    .empty-state-icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+    }
+
+    @media (max-width: 800px) {
+        .filter-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .activity-table th,
+        .activity-table td {
+            padding: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+    <h1>📋 Activity Log</h1>
+    <p>Track important activities and changes made in WAHOME HERD.</p>
+</div>
+
+
+<!-- SUMMARY -->
+<div class="summary-card">
+    <h3>Total Activity Records</h3>
+    <div class="summary-number">{{ total_logs }}</div>
+</div>
+
+
+<!-- FILTERS -->
+<div class="filter-card">
+
+    <h3>Filter Activity</h3>
+
+    <form method="get">
+
+        <div class="filter-grid">
+
+            <!-- ACTION -->
+            <div class="form-group">
+                <label for="action">Action</label>
+
+                <select name="action" id="action">
+
+                    <option value="">All Actions</option>
+
+                    {% for value, label in action_choices %}
+                        <option value="{{ value }}"
+                            {% if selected_action == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+
+            <!-- MODULE -->
+            <div class="form-group">
+                <label for="module">Module</label>
+
+                <select name="module" id="module">
+
+                    <option value="">All Modules</option>
+
+                    {% for module in modules %}
+                        <option value="{{ module }}"
+                            {% if selected_module == module %}selected{% endif %}>
+                            {{ module }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+
+            <!-- USERNAME -->
+            <div class="form-group">
+                <label for="username">Username</label>
+
+                <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    placeholder="Search username..."
+                    value="{{ selected_username }}"
+                >
+            </div>
+
+        </div>
+
+
+        <div class="filter-buttons">
+
+            <button type="submit" class="btn btn-primary">
+                🔍 Apply Filters
+            </button>
+
+            <a href="{% url 'activity_log' %}" class="btn btn-secondary">
+                Clear Filters
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- ACTIVITY TABLE -->
+<div class="log-card">
+
+    {% if logs %}
+
+        <div class="table-wrapper">
+
+            <table class="activity-table">
+
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Module</th>
+                        <th>Description</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for log in logs %}
+
+                        <tr>
+
+                            <td>
+                                {% if log.user %}
+                                    <span class="username">
+                                        {{ log.user.username }}
+                                    </span>
+                                {% else %}
+                                    <span>System</span>
+                                {% endif %}
+                            </td>
+
+
+                            <td>
+
+                                {% if log.action == 'CREATE' %}
+                                    <span class="action-badge action-create">
+                                        Created
+                                    </span>
+
+                                {% elif log.action == 'UPDATE' %}
+                                    <span class="action-badge action-update">
+                                        Updated
+                                    </span>
+
+                                {% elif log.action == 'DELETE' %}
+                                    <span class="action-badge action-delete">
+                                        Deleted
+                                    </span>
+
+                                {% elif log.action == 'LOGIN' %}
+                                    <span class="action-badge action-login">
+                                        Logged In
+                                    </span>
+
+                                {% elif log.action == 'LOGOUT' %}
+                                    <span class="action-badge action-logout">
+                                        Logged Out
+                                    </span>
+
+                                {% else %}
+                                    <span class="action-badge action-other">
+                                        Other
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                <span class="module">
+                                    {{ log.module }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <div class="description">
+                                    {{ log.description }}
+                                </div>
+                            </td>
+
+
+                            <td>
+                                <span class="date-time">
+                                    {{ log.created_at|date:"d M Y" }}<br>
+                                    {{ log.created_at|date:"H:i:s" }}
+                                </span>
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <div class="empty-state-icon">📋</div>
+
+            <h3>No Activity Found</h3>
+
+            <p>
+                There are no activity records matching your filters.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

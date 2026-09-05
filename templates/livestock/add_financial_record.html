@@ -1,0 +1,482 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Add Transaction - WAHOME HERD{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    /* =========================
+       PAGE HEADER
+    ========================= */
+
+    .finance-header {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+
+    .finance-header h1 {
+        margin: 0;
+        color: #2e7d32;
+        font-size: 28px;
+    }
+
+    .finance-header p {
+        margin: 7px 0 0;
+        color: #777;
+    }
+
+
+    /* =========================
+       FORM CONTAINER
+    ========================= */
+
+    .form-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .form-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .form-card h2 {
+        margin-top: 0;
+        color: #1b5e20;
+    }
+
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .full-width {
+        grid-column: 1 / -1;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 7px;
+        color: #444;
+    }
+
+    .required {
+        color: #c62828;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #2e7d32;
+    }
+
+    textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .help-text {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #888;
+    }
+
+
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .button {
+        border: none;
+        padding: 13px 22px;
+        border-radius: 7px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .save-button {
+        background: #2e7d32;
+        color: white;
+    }
+
+    .save-button:hover {
+        background: #1b5e20;
+    }
+
+    .cancel-button {
+        background: #eee;
+        color: #444;
+    }
+
+    .cancel-button:hover {
+        background: #ddd;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 700px) {
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .full-width {
+            grid-column: auto;
+        }
+
+        .form-card {
+            padding: 20px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================
+     PAGE HEADER
+========================= -->
+
+<div class="finance-header">
+
+    <h1>💰 Add Financial Transaction</h1>
+
+    <p>
+        Record farm income or expenses.
+    </p>
+
+</div>
+
+
+<!-- =========================
+     FORM
+========================= -->
+
+<div class="form-container">
+
+    <div class="form-card">
+
+        <h2>Transaction Details</h2>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="form-grid">
+
+
+                <!-- RECORD TYPE -->
+
+                <div class="form-group">
+
+                    <label for="record_type">
+
+                        Transaction Type
+
+                        <span class="required">*</span>
+
+                    </label>
+
+                    <select
+                        name="record_type"
+                        id="record_type"
+                        required
+                    >
+
+                        <option value="">
+                            Select type
+                        </option>
+
+                        <option value="INCOME">
+                            Income
+                        </option>
+
+                        <option value="EXPENSE">
+                            Expense
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="form-group">
+
+                    <label for="category">
+
+                        Category
+
+                        <span class="required">*</span>
+
+                    </label>
+
+                    <select
+                        name="category"
+                        id="category"
+                        required
+                    >
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <optgroup label="Income">
+
+                            <option value="ANIMAL_SALE">
+                                Animal Sale
+                            </option>
+
+                            <option value="MILK_SALE">
+                                Milk Sale
+                            </option>
+
+                            <option value="MEAT_SALE">
+                                Meat Sale
+                            </option>
+
+                            <option value="OTHER_INCOME">
+                                Other Income
+                            </option>
+
+                        </optgroup>
+
+
+                        <optgroup label="Expenses">
+
+                            <option value="FEED">
+                                Feed
+                            </option>
+
+                            <option value="MEDICINE">
+                                Medicine
+                            </option>
+
+                            <option value="VETERINARY">
+                                Veterinary
+                            </option>
+
+                            <option value="LABOUR">
+                                Labour
+                            </option>
+
+                            <option value="EQUIPMENT">
+                                Equipment
+                            </option>
+
+                            <option value="TRANSPORT">
+                                Transport
+                            </option>
+
+                            <option value="OTHER_EXPENSE">
+                                Other Expense
+                            </option>
+
+                        </optgroup>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="form-group">
+
+                    <label for="date">
+
+                        Date
+
+                        <span class="required">*</span>
+
+                    </label>
+
+                    <input
+                        type="date"
+                        name="date"
+                        id="date"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- AMOUNT -->
+
+                <div class="form-group">
+
+                    <label for="amount">
+
+                        Amount (KSh)
+
+                        <span class="required">*</span>
+
+                    </label>
+
+                    <input
+                        type="number"
+                        name="amount"
+                        id="amount"
+                        step="0.01"
+                        min="0"
+                        placeholder="e.g. 5000"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ANIMAL -->
+
+                <div class="form-group full-width">
+
+                    <label for="animal">
+                        Related Animal
+                    </label>
+
+                    <select
+                        name="animal"
+                        id="animal"
+                    >
+
+                        <option value="">
+                            No specific animal
+                        </option>
+
+                        {% for animal in animals %}
+
+                        <option value="{{ animal.animal_id }}">
+
+                            {{ animal.animal_id }}
+
+                            —
+
+                            {{ animal.species }}
+
+                            {% if animal.breed %}
+                                ({{ animal.breed }})
+                            {% endif %}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                    <div class="help-text">
+
+                        Optional. Select an animal if this transaction
+                        is directly related to a specific animal.
+
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group full-width">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        id="description"
+                        placeholder="Describe the transaction..."
+                    ></textarea>
+
+                </div>
+
+
+                <!-- NOTES -->
+
+                <div class="form-group full-width">
+
+                    <label for="notes">
+                        Notes
+                    </label>
+
+                    <textarea
+                        name="notes"
+                        id="notes"
+                        placeholder="Additional notes..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <button
+                    type="submit"
+                    class="button save-button"
+                >
+                    💾 Save Transaction
+                </button>
+
+                <a
+                    href="{% url 'finance_dashboard' %}"
+                    class="button cancel-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit {{ animal.animal_id }} - WAHOME HERD</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 750px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #2e5d34;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        button {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #256628;
+        }
+
+        .cancel {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #555;
+        }
+
+        .cancel:hover {
+            color: #2e7d32;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>✏️ Edit Animal</h1>
+
+    <p class="description">
+        Update the information for <strong>{{ animal.animal_id }}</strong>.
+    </p>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="animal_id">Animal ID</label>
+            <input
+                type="text"
+                id="animal_id"
+                name="animal_id"
+                value="{{ animal.animal_id }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="species">Species</label>
+            <select id="species" name="species" required>
+
+                <option value="COW"
+                    {% if animal.species == "COW" %}selected{% endif %}>
+                    Cow
+                </option>
+
+                <option value="SHEEP"
+                    {% if animal.species == "SHEEP" %}selected{% endif %}>
+                    Sheep
+                </option>
+
+                <option value="GOAT"
+                    {% if animal.species == "GOAT" %}selected{% endif %}>
+                    Goat
+                </option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="breed">Breed</label>
+            <input
+                type="text"
+                id="breed"
+                name="breed"
+                value="{{ animal.breed }}"
+                placeholder="e.g. Friesian"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="sex">Sex</label>
+            <select id="sex" name="sex" required>
+
+                <option value="MALE"
+                    {% if animal.sex == "MALE" %}selected{% endif %}>
+                    Male
+                </option>
+
+                <option value="FEMALE"
+                    {% if animal.sex == "FEMALE" %}selected{% endif %}>
+                    Female
+                </option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date_of_birth">Date of Birth</label>
+            <input
+                type="date"
+                id="date_of_birth"
+                name="date_of_birth"
+                value="{{ animal.date_of_birth|date:'Y-m-d' }}"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="colour">Colour</label>
+            <input
+                type="text"
+                id="colour"
+                name="colour"
+                value="{{ animal.colour }}"
+                placeholder="e.g. Black and white"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="weight">Weight (kg)</label>
+            <input
+                type="number"
+                id="weight"
+                name="weight"
+                value="{{ animal.weight }}"
+                step="0.01"
+                min="0"
+                placeholder="e.g. 350.50"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="date_acquired">Date Acquired</label>
+            <input
+                type="date"
+                id="date_acquired"
+                name="date_acquired"
+                value="{{ animal.date_acquired|date:'Y-m-d' }}"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+
+            <select id="status" name="status" required>
+
+                <option value="ACTIVE"
+                    {% if animal.status == "ACTIVE" %}selected{% endif %}>
+                    Active
+                </option>
+
+                <option value="SOLD"
+                    {% if animal.status == "SOLD" %}selected{% endif %}>
+                    Sold
+                </option>
+
+                <option value="DECEASED"
+                    {% if animal.status == "DECEASED" %}selected{% endif %}>
+                    Deceased
+                </option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Notes</label>
+
+            <textarea
+                id="notes"
+                name="notes"
+                placeholder="Enter any additional information..."
+            >{{ animal.notes }}</textarea>
+        </div>
+
+        <div class="buttons">
+
+            <button type="submit">
+                Save Changes
+            </button>
+
+            <a
+                href="{% url 'animal_detail' animal.animal_id %}"
+                class="cancel"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

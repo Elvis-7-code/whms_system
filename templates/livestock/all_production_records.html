@@ -1,0 +1,170 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Production Records - WAHOME HERD{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>🥛 Production Records</h1>
+
+        <p>
+            View production records from across the entire herd.
+        </p>
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    {% if records %}
+
+        <div style="overflow-x:auto;">
+
+            <table style="
+                width:100%;
+                border-collapse:collapse;
+                min-width:750px;
+            ">
+
+                <thead>
+
+                    <tr style="background:#f0f3f1;">
+
+                        <th style="padding:14px 12px; text-align:left;">
+                            Animal ID
+                        </th>
+
+                        <th style="padding:14px 12px; text-align:left;">
+                            Production Type
+                        </th>
+
+                        <th style="padding:14px 12px; text-align:left;">
+                            Date
+                        </th>
+
+                        <th style="padding:14px 12px; text-align:left;">
+                            Quantity
+                        </th>
+
+                        <th style="padding:14px 12px; text-align:left;">
+                            Unit
+                        </th>
+
+                        <th style="padding:14px 12px; text-align:left;">
+                            Notes
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for record in records %}
+
+                        <tr style="
+                            border-bottom:1px solid #e5e7eb;
+                        ">
+
+                            <td style="padding:14px 12px;">
+
+                                <a
+                                    href="{% url 'animal_detail' record.animal.animal_id %}"
+                                    style="
+                                        color:#246b3a;
+                                        font-weight:bold;
+                                        text-decoration:none;
+                                    "
+                                >
+                                    {{ record.animal.animal_id }}
+                                </a>
+
+                            </td>
+
+
+                            <td style="padding:14px 12px;">
+
+                                <span style="
+                                    display:inline-block;
+                                    padding:5px 9px;
+                                    border-radius:20px;
+                                    background:#e8f4ec;
+                                    color:#246b3a;
+                                    font-size:12px;
+                                    font-weight:bold;
+                                ">
+                                    {{ record.get_production_type_display }}
+                                </span>
+
+                            </td>
+
+
+                            <td style="padding:14px 12px;">
+                                {{ record.date|date:"d M Y" }}
+                            </td>
+
+
+                            <td style="padding:14px 12px;">
+                                {{ record.quantity }}
+                            </td>
+
+
+                            <td style="padding:14px 12px;">
+                                {{ record.unit }}
+                            </td>
+
+
+                            <td style="padding:14px 12px;">
+
+                                {% if record.notes %}
+                                    {{ record.notes }}
+                                {% else %}
+                                    —
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    {% else %}
+
+        <div style="
+            text-align:center;
+            padding:45px 20px;
+            color:#6b7280;
+        ">
+
+            <div style="
+                font-size:40px;
+                margin-bottom:10px;
+            ">
+                🥛
+            </div>
+
+            <h3>No Production Records Yet</h3>
+
+            <p>
+                Production records will appear here once they are added
+                to your livestock.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

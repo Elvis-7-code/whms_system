@@ -1,0 +1,255 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Edit Production Record - WAHOME HERD{% endblock %}
+
+{% block extra_css %}
+
+<style>
+    .page-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        color: #1b5e20;
+        font-size: 30px;
+    }
+
+    .page-header p {
+        margin-top: 8px;
+        color: #6b756e;
+    }
+
+    .form-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .animal-info {
+        background: #f0f4f1;
+        padding: 15px 18px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        color: #445048;
+    }
+
+    .animal-info strong {
+        color: #1b5e20;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: bold;
+        color: #445048;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 11px 12px;
+        border: 1px solid #d5ddd7;
+        border-radius: 7px;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+    }
+
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #2f7548;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 11px 20px;
+        border-radius: 7px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .save-button {
+        background: #2f7548;
+        color: white;
+    }
+
+    .save-button:hover {
+        background: #245d39;
+    }
+
+    .cancel-button {
+        background: #eef1ef;
+        color: #445048;
+    }
+
+    .cancel-button:hover {
+        background: #e1e6e2;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+```
+<div class="page-header">
+    <h1>Edit Production Record</h1>
+    <p>Update the production information for this record.</p>
+</div>
+
+<div class="form-card">
+
+    <div class="animal-info">
+        Animal:
+        <strong>{{ animal.animal_id }}</strong>
+    </div>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="production_type">
+                Production Type
+            </label>
+
+            <select
+                name="production_type"
+                id="production_type"
+                required
+            >
+                <option value="MILK"
+                    {% if record.production_type == 'MILK' %}selected{% endif %}>
+                    Milk
+                </option>
+
+                <option value="WEIGHT"
+                    {% if record.production_type == 'WEIGHT' %}selected{% endif %}>
+                    Weight
+                </option>
+
+                <option value="MEAT"
+                    {% if record.production_type == 'MEAT' %}selected{% endif %}>
+                    Meat
+                </option>
+
+                <option value="OTHER"
+                    {% if record.production_type == 'OTHER' %}selected{% endif %}>
+                    Other
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date">
+                Date
+            </label>
+
+            <input
+                type="date"
+                name="date"
+                id="date"
+                value="{{ record.date|date:'Y-m-d' }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">
+                Quantity
+            </label>
+
+            <input
+                type="number"
+                name="quantity"
+                id="quantity"
+                step="0.01"
+                min="0"
+                value="{{ record.quantity }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="unit">
+                Unit
+            </label>
+
+            <input
+                type="text"
+                name="unit"
+                id="unit"
+                value="{{ record.unit }}"
+                placeholder="e.g. Litres, Kg"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="notes">
+                Notes
+            </label>
+
+            <textarea
+                name="notes"
+                id="notes"
+                placeholder="Optional notes..."
+            >{{ record.notes }}</textarea>
+        </div>
+
+        <div class="form-actions">
+
+            <button
+                type="submit"
+                class="button save-button"
+            >
+                Save Changes
+            </button>
+
+            <a
+                href="{% url 'production_records' animal.animal_id %}"
+                class="button cancel-button"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

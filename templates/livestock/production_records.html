@@ -1,0 +1,1011 @@
+```html
+{% extends 'livestock/base.html' %}
+
+{% block title %}Production Records - {{ animal.animal_id }}{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .production-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 25px 20px 40px;
+    }
+
+    /* =========================
+       PAGE HEADER
+    ========================= */
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
+    .page-title h1 {
+        margin: 0;
+        color: #1b5e20;
+        font-size: 30px;
+    }
+
+    .page-title p {
+        margin: 7px 0 0;
+        color: #666;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 11px 18px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+
+    .button:hover {
+        transform: translateY(-1px);
+        opacity: 0.92;
+    }
+
+    .back-button {
+        background: #757575;
+        color: white;
+    }
+
+    .add-button {
+        background: #2e7d32;
+        color: white;
+    }
+
+    /* =========================
+       ANIMAL SUMMARY
+    ========================= */
+
+    .animal-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 9px rgba(0,0,0,0.08);
+        border-left: 5px solid #2e7d32;
+    }
+
+    .animal-card h2 {
+        margin: 0 0 15px;
+        color: #1b5e20;
+        font-size: 21px;
+    }
+
+    .animal-info {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+
+    .info-item {
+        background: #f5f8f5;
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .info-label {
+        display: block;
+        font-size: 12px;
+        color: #777;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* =========================
+       STAT CARDS
+    ========================= */
+
+    .section-title {
+        color: #1b5e20;
+        margin: 30px 0 15px;
+        font-size: 21px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 15px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 11px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        border-top: 4px solid #2e7d32;
+    }
+
+    .stat-label {
+        color: #777;
+        font-size: 13px;
+        margin-bottom: 9px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1b5e20;
+    }
+
+    .stat-description {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #888;
+    }
+
+    /* =========================
+       PERFORMANCE
+    ========================= */
+
+    .performance-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .performance-card {
+        background: white;
+        padding: 20px;
+        border-radius: 11px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .performance-card h3 {
+        margin: 0 0 10px;
+        color: #1b5e20;
+        font-size: 16px;
+    }
+
+    .performance-number {
+        font-size: 26px;
+        font-weight: bold;
+        color: #2e7d32;
+    }
+
+    .performance-detail {
+        color: #777;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    /* =========================
+       CHART
+    ========================= */
+
+    .chart-card {
+        background: white;
+        padding: 22px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        margin-top: 15px;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 330px;
+    }
+
+    /* =========================
+       TYPE BREAKDOWN
+    ========================= */
+
+    .breakdown-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .breakdown-card {
+        background: white;
+        padding: 20px;
+        border-radius: 11px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .breakdown-card h3 {
+        margin: 0 0 12px;
+        color: #1b5e20;
+    }
+
+    .breakdown-total {
+        font-size: 25px;
+        font-weight: bold;
+        color: #2e7d32;
+    }
+
+    .breakdown-count {
+        margin-top: 5px;
+        color: #777;
+        font-size: 13px;
+    }
+
+    /* =========================
+       TABLE
+    ========================= */
+
+    .records-container {
+        background: white;
+        border-radius: 12px;
+        overflow-x: auto;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        margin-top: 15px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 980px;
+    }
+
+    th {
+        background: #e8f5e9;
+        color: #1b5e20;
+        padding: 15px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    td {
+        padding: 14px 15px;
+        border-top: 1px solid #eee;
+        font-size: 14px;
+    }
+
+    tr:hover {
+        background: #fafafa;
+    }
+
+    .type {
+        font-weight: bold;
+        color: #2e7d32;
+    }
+
+    .quantity {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .notes {
+        max-width: 300px;
+    }
+
+    /* =========================
+       ACTION BUTTONS
+    ========================= */
+
+    .actions {
+        white-space: nowrap;
+    }
+
+    .action-button {
+        display: inline-block;
+        padding: 7px 11px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 5px;
+        transition: 0.2s;
+    }
+
+    .action-button:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+    }
+
+    .edit-button {
+        background: #1976d2;
+        color: white;
+    }
+
+    .delete-button {
+        background: #d32f2f;
+        color: white;
+    }
+
+    /* =========================
+       EMPTY STATE
+    ========================= */
+
+    .empty {
+        background: white;
+        padding: 55px 25px;
+        text-align: center;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .empty h2 {
+        color: #1b5e20;
+        margin-bottom: 10px;
+    }
+
+    .empty p {
+        color: #777;
+        margin-bottom: 20px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 1000px) {
+
+        .stats-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .animal-info {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+
+    @media (max-width: 700px) {
+
+        .stats-grid,
+        .performance-grid,
+        .breakdown-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .animal-info {
+            grid-template-columns: 1fr;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+        }
+
+        .header-actions {
+            width: 100%;
+        }
+
+        .header-actions .button {
+            flex: 1;
+            text-align: center;
+        }
+
+        .chart-container {
+            height: 260px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="production-page">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================= -->
+
+    <div class="page-header">
+
+        <div class="page-title">
+
+            <h1>
+                Production Records
+            </h1>
+
+            <p>
+                Production performance for
+                <strong>{{ animal.animal_id }}</strong>
+            </p>
+
+        </div>
+
+        <div class="header-actions">
+
+            <a
+                href="{% url 'animal_detail' animal.animal_id %}"
+                class="button back-button"
+            >
+                ← Back to Animal
+            </a>
+
+            <a
+                href="{% url 'add_production_record' animal.animal_id %}"
+                class="button add-button"
+            >
+                + Add Production Record
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         ANIMAL INFORMATION
+    ========================= -->
+
+    <div class="animal-card">
+
+        <h2>
+            🐄 {{ animal.animal_id }}
+        </h2>
+
+        <div class="animal-info">
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Species
+                </span>
+
+                <span class="info-value">
+                    {{ animal.get_species_display }}
+                </span>
+
+            </div>
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Breed
+                </span>
+
+                <span class="info-value">
+                    {{ animal.breed|default:"—" }}
+                </span>
+
+            </div>
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Sex
+                </span>
+
+                <span class="info-value">
+                    {{ animal.get_sex_display }}
+                </span>
+
+            </div>
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Current Status
+                </span>
+
+                <span class="info-value">
+                    {{ animal.get_status_display }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% if records %}
+
+    <!-- =========================
+         PRODUCTION SUMMARY
+    ========================= -->
+
+    <h2 class="section-title">
+        Production Summary
+    </h2>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Total Records
+            </div>
+
+            <div class="stat-value">
+                {{ total_records }}
+            </div>
+
+            <div class="stat-description">
+                Production entries
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Milk Production
+            </div>
+
+            <div class="stat-value">
+                {{ milk_total|floatformat:2 }}
+            </div>
+
+            <div class="stat-description">
+                Recorded milk
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Meat Production
+            </div>
+
+            <div class="stat-value">
+                {{ meat_total|floatformat:2 }}
+            </div>
+
+            <div class="stat-description">
+                Recorded meat
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Weight Records
+            </div>
+
+            <div class="stat-value">
+                {{ weight_total|floatformat:2 }}
+            </div>
+
+            <div class="stat-description">
+                Recorded weight
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                This Month
+            </div>
+
+            <div class="stat-value">
+                {{ month_total|floatformat:2 }}
+            </div>
+
+            <div class="stat-description">
+                Recorded quantity
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Last 7 Days
+            </div>
+
+            <div class="stat-value">
+                {{ last_7_days_total|floatformat:2 }}
+            </div>
+
+            <div class="stat-description">
+                Recent quantity
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         PERFORMANCE
+    ========================= -->
+
+    <h2 class="section-title">
+        Production Performance
+    </h2>
+
+    <div class="performance-grid">
+
+        <div class="performance-card">
+
+            <h3>
+                Average Production
+            </h3>
+
+            <div class="performance-number">
+                {{ average_production|floatformat:2 }}
+            </div>
+
+            <div class="performance-detail">
+                Average quantity per record
+            </div>
+
+        </div>
+
+
+        <div class="performance-card">
+
+            <h3>
+                Latest Production
+            </h3>
+
+            {% if latest_record %}
+
+                <div class="performance-number">
+                    {{ latest_record.quantity|floatformat:2 }}
+                </div>
+
+                <div class="performance-detail">
+
+                    {{ latest_record.get_production_type_display }}
+
+                    ·
+
+                    {{ latest_record.unit }}
+
+                    ·
+
+                    {{ latest_record.date }}
+
+                </div>
+
+            {% else %}
+
+                <div class="performance-number">
+                    —
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="performance-card">
+
+            <h3>
+                Highest Recorded
+            </h3>
+
+            {% if highest_record %}
+
+                <div class="performance-number">
+                    {{ highest_record.quantity|floatformat:2 }}
+                </div>
+
+                <div class="performance-detail">
+
+                    {{ highest_record.get_production_type_display }}
+
+                    ·
+
+                    {{ highest_record.unit }}
+
+                    ·
+
+                    {{ highest_record.date }}
+
+                </div>
+
+            {% else %}
+
+                <div class="performance-number">
+                    —
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         30 DAY CHART
+    ========================= -->
+
+    <h2 class="section-title">
+        30-Day Production Trend
+    </h2>
+
+    <div class="chart-card">
+
+        <div class="chart-container">
+
+            <canvas id="productionTrendChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         PRODUCTION TYPE BREAKDOWN
+    ========================= -->
+
+    <h2 class="section-title">
+        Production by Type
+    </h2>
+
+    <div class="breakdown-grid">
+
+        {% for item in production_type_summary %}
+
+        <div class="breakdown-card">
+
+            <h3>
+                {{ item.name }}
+            </h3>
+
+            <div class="breakdown-total">
+                {{ item.total|floatformat:2 }}
+            </div>
+
+            <div class="breakdown-count">
+
+                {{ item.count }}
+
+                {% if item.count == 1 %}
+                    record
+                {% else %}
+                    records
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- =========================
+         PRODUCTION HISTORY
+    ========================= -->
+
+    <h2 class="section-title">
+        Production History
+    </h2>
+
+    <div class="records-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Date</th>
+                    <th>Production Type</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for record in records %}
+
+                <tr>
+
+                    <td>
+                        {{ record.date }}
+                    </td>
+
+                    <td class="type">
+                        {{ record.get_production_type_display }}
+                    </td>
+
+                    <td class="quantity">
+                        {{ record.quantity|floatformat:2 }}
+                    </td>
+
+                    <td>
+                        {{ record.unit }}
+                    </td>
+
+                    <td class="notes">
+
+                        {% if record.notes %}
+                            {{ record.notes }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </td>
+
+                    <td class="actions">
+
+                        <a
+                            href="{% url 'edit_production_record' record.id %}"
+                            class="action-button edit-button"
+                        >
+                            Edit
+                        </a>
+
+                        <a
+                            href="{% url 'delete_production_record' record.id %}"
+                            class="action-button delete-button"
+                        >
+                            Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {% else %}
+
+    <!-- =========================
+         EMPTY STATE
+    ========================= -->
+
+    <div class="empty">
+
+        <h2>
+            No Production Records Yet
+        </h2>
+
+        <p>
+            There are currently no production records
+            for <strong>{{ animal.animal_id }}</strong>.
+        </p>
+
+        <a
+            href="{% url 'add_production_record' animal.animal_id %}"
+            class="button add-button"
+        >
+            + Add First Production Record
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+{{ trend_labels|json_script:"production-trend-labels" }}
+{{ trend_values|json_script:"production-trend-values" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    const trendLabels = JSON.parse(
+        document.getElementById(
+            'production-trend-labels'
+        ).textContent
+    );
+
+    const trendValues = JSON.parse(
+        document.getElementById(
+            'production-trend-values'
+        ).textContent
+    );
+
+
+    const chartCanvas = document.getElementById(
+        'productionTrendChart'
+    );
+
+
+    if (chartCanvas) {
+
+        new Chart(
+            chartCanvas,
+            {
+                type: 'line',
+
+                data: {
+                    labels: trendLabels,
+
+                    datasets: [
+                        {
+                            label: 'Daily Production',
+
+                            data: trendValues,
+
+                            borderWidth: 3,
+
+                            tension: 0.35,
+
+                            fill: true,
+
+                            pointRadius: 3,
+
+                            pointHoverRadius: 6
+                        }
+                    ]
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+
+                    plugins: {
+
+                        legend: {
+                            display: true
+                        }
+
+                    },
+
+                    scales: {
+
+                        y: {
+                            beginAtZero: true,
+
+                            title: {
+                                display: true,
+                                text: 'Recorded Quantity'
+                            }
+                        },
+
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+{% endblock %}
+```

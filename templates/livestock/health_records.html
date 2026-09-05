@@ -1,0 +1,923 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Health Records - {{ animal.animal_id }} - WAHOME HERD{% endblock %}
+
+{% block content %}
+
+<style>
+
+    /* =========================================================
+       WAHOME HERD - HEALTH RECORDS
+    ========================================================= */
+
+    .health-page {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* =========================================================
+       PAGE HEADER
+    ========================================================= */
+
+    .health-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+    }
+
+    .health-title h1 {
+        margin: 0 0 6px;
+        font-size: 30px;
+        color: #1b5e20;
+    }
+
+    .health-title p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+    .health-title strong {
+        color: #1f2937;
+    }
+
+    /* =========================================================
+       ACTIONS
+    ========================================================= */
+
+    .health-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 10px 15px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: 0.2s ease;
+    }
+
+    .back-btn {
+        background: #f4f6f8;
+        color: #1b5e20;
+        border: 1px solid #dfe5e1;
+    }
+
+    .back-btn:hover {
+        background: #e8f5e9;
+    }
+
+    .add-btn {
+        background: #1b5e20;
+        color: white;
+    }
+
+    .add-btn:hover {
+        background: #144a18;
+    }
+
+    /* =========================================================
+       RECORD ACTION BUTTONS
+    ========================================================= */
+
+    .record-actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .record-action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+    .edit-record-btn {
+        background: #e8f5e9;
+        color: #1b5e20;
+        border: 1px solid #c8e6c9;
+    }
+
+    .edit-record-btn:hover {
+        background: #c8e6c9;
+    }
+
+    .delete-record-btn {
+        background: #ffebee;
+        color: #c62828;
+        border: 1px solid #ffcdd2;
+    }
+
+    .delete-record-btn:hover {
+        background: #ffcdd2;
+    }
+
+    /* =========================================================
+       ANIMAL SUMMARY
+    ========================================================= */
+
+    .animal-summary {
+        background: white;
+        border-radius: 14px;
+        padding: 22px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        margin-bottom: 22px;
+    }
+
+    .animal-summary-inner {
+        display: flex;
+        align-items: center;
+        gap: 17px;
+        flex-wrap: wrap;
+    }
+
+    .animal-icon {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        background: #e8f5e9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        flex-shrink: 0;
+    }
+
+    .animal-info {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    .animal-info h2 {
+        margin: 0 0 5px;
+        font-size: 21px;
+        color: #1f2937;
+    }
+
+    .animal-info p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .animal-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 13px;
+        background: #e8f5e9;
+        color: #2e7d32;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    /* =========================================================
+       STAT CARDS
+    ========================================================= */
+
+    .health-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .health-stat {
+        background: white;
+        border-radius: 11px;
+        padding: 18px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 7px rgba(0,0,0,0.04);
+    }
+
+    .stat-icon {
+        font-size: 24px;
+        margin-bottom: 9px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #6b7280;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .stat-value {
+        font-size: 23px;
+        font-weight: 700;
+        color: #1b5e20;
+    }
+
+    /* =========================================================
+       MAIN CARD
+    ========================================================= */
+
+    .health-card {
+        background: white;
+        border-radius: 14px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        margin-bottom: 25px;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .card-header h2 {
+        margin: 0;
+        color: #1f2937;
+        font-size: 20px;
+    }
+
+    .card-header p {
+        margin: 5px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    /* =========================================================
+       TABLE
+    ========================================================= */
+
+    .table-wrapper {
+        overflow-x: auto;
+        border: 1px solid #edf0f2;
+        border-radius: 9px;
+    }
+
+    .health-table {
+        width: 100%;
+        min-width: 1100px;
+        border-collapse: collapse;
+    }
+
+    .health-table th {
+        background: #f4f6f8;
+        color: #374151;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        padding: 13px 12px;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .health-table td {
+        padding: 14px 12px;
+        border-bottom: 1px solid #edf0f2;
+        color: #4b5563;
+        font-size: 14px;
+        vertical-align: top;
+    }
+
+    .health-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .health-table tbody tr:hover {
+        background: #fafcfb;
+    }
+
+    /* =========================================================
+       RECORD TYPE
+    ========================================================= */
+
+    .record-type {
+        display: inline-block;
+        padding: 5px 10px;
+        background: #e8f5e9;
+        color: #2e7d32;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    /* =========================================================
+       DUE DATE
+    ========================================================= */
+
+    .due-date {
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .no-date {
+        color: #9ca3af;
+    }
+
+    /* =========================================================
+       DESCRIPTION
+    ========================================================= */
+
+    .description-cell {
+        min-width: 180px;
+        max-width: 300px;
+        line-height: 1.5;
+    }
+
+    .notes-cell {
+        min-width: 150px;
+        max-width: 250px;
+        line-height: 1.5;
+    }
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+
+    .empty-state {
+        text-align: center;
+        padding: 55px 20px;
+        color: #6b7280;
+    }
+
+    .empty-icon {
+        width: 75px;
+        height: 75px;
+        margin: 0 auto 15px;
+        border-radius: 50%;
+        background: #e8f5e9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 37px;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 7px;
+        color: #1f2937;
+        font-size: 19px;
+    }
+
+    .empty-state p {
+        margin: 0 auto;
+        max-width: 500px;
+        line-height: 1.6;
+        font-size: 14px;
+    }
+
+    .empty-add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 17px;
+        background: #1b5e20;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .empty-add-btn:hover {
+        background: #144a18;
+    }
+
+    /* =========================================================
+       HEALTH TIPS
+    ========================================================= */
+
+    .health-info-box {
+        background: #f8faf9;
+        border-left: 4px solid #1b5e20;
+        border-radius: 7px;
+        padding: 17px;
+        margin-top: 20px;
+    }
+
+    .health-info-box strong {
+        display: block;
+        color: #1f2937;
+        margin-bottom: 5px;
+    }
+
+    .health-info-box p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 700px) {
+
+        .health-card,
+        .animal-summary {
+            padding: 18px;
+        }
+
+        .health-title h1 {
+            font-size: 25px;
+        }
+
+        .health-actions {
+            width: 100%;
+        }
+
+        .action-btn {
+            flex: 1;
+        }
+
+        .animal-summary-inner {
+            align-items: flex-start;
+        }
+
+        .health-stats {
+            grid-template-columns: 1fr 1fr;
+        }
+
+    }
+
+    @media (max-width: 450px) {
+
+        .health-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .health-actions {
+            flex-direction: column;
+        }
+
+        .action-btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<div class="health-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="health-header">
+
+        <div class="health-title">
+
+            <h1>🩺 Health Records</h1>
+
+            <p>
+                Complete health and veterinary history for
+                <strong>{{ animal.animal_id }}</strong>
+            </p>
+
+        </div>
+
+
+        <div class="health-actions">
+
+            <a
+                href="{% url 'animal_detail' animal.animal_id %}"
+                class="action-btn back-btn"
+            >
+                ← Back to Animal
+            </a>
+
+            <a
+                href="{% url 'add_health_record' animal.animal_id %}"
+                class="action-btn add-btn"
+            >
+                ➕ Add Health Record
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ANIMAL SUMMARY
+    ====================================================== -->
+
+    <div class="animal-summary">
+
+        <div class="animal-summary-inner">
+
+            <div class="animal-icon">
+
+                {% if animal.species == 'COW' %}
+                    🐄
+                {% elif animal.species == 'GOAT' %}
+                    🐐
+                {% elif animal.species == 'SHEEP' %}
+                    🐑
+                {% else %}
+                    🐾
+                {% endif %}
+
+            </div>
+
+
+            <div class="animal-info">
+
+                <h2>
+                    {{ animal.animal_id }}
+                </h2>
+
+                <p>
+
+                    {{ animal.get_species_display }}
+
+                    {% if animal.breed %}
+                        • {{ animal.breed }}
+                    {% endif %}
+
+                    • {{ animal.get_sex_display }}
+
+                </p>
+
+            </div>
+
+
+            {% if animal.status == 'ACTIVE' %}
+
+                <span class="animal-status">
+                    ● Active
+                </span>
+
+            {% elif animal.status == 'SOLD' %}
+
+                <span
+                    class="animal-status"
+                    style="background:#fff3e0; color:#ef6c00;"
+                >
+                    ● Sold
+                </span>
+
+            {% else %}
+
+                <span
+                    class="animal-status"
+                    style="background:#ffebee; color:#c62828;"
+                >
+                    ● Deceased
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HEALTH STATISTICS
+    ====================================================== -->
+
+    <div class="health-stats">
+
+        <div class="health-stat">
+
+            <div class="stat-icon">
+                🩺
+            </div>
+
+            <div class="stat-label">
+                Total Records
+            </div>
+
+            <div class="stat-value">
+                {{ records|length }}
+            </div>
+
+        </div>
+
+
+        <div class="health-stat">
+
+            <div class="stat-icon">
+                💉
+            </div>
+
+            <div class="stat-label">
+                Treatments
+            </div>
+
+            <div class="stat-value">
+
+                {% widthratio records|length 1 1 %}
+
+            </div>
+
+        </div>
+
+
+        <div class="health-stat">
+
+            <div class="stat-icon">
+                📅
+            </div>
+
+            <div class="stat-label">
+                Health History
+            </div>
+
+            <div class="stat-value">
+                {% if records %}
+                    Available
+                {% else %}
+                    None
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HEALTH HISTORY
+    ====================================================== -->
+
+    <div class="health-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Health History
+                </h2>
+
+                <p>
+                    Veterinary visits, treatments, vaccinations and other health records
+                </p>
+
+            </div>
+
+
+            <a
+                href="{% url 'add_health_record' animal.animal_id %}"
+                class="action-btn add-btn"
+            >
+                ➕ Add Record
+            </a>
+
+        </div>
+
+
+        {% if records %}
+
+            <div class="table-wrapper">
+
+                <table class="health-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Record Type
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Medication
+                            </th>
+
+                            <th>
+                                Veterinarian
+                            </th>
+
+                            <th>
+                                Next Due
+                            </th>
+
+                            <th>
+                                Notes
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for record in records %}
+
+                            <tr>
+
+                                <td>
+                                    {{ record.date }}
+                                </td>
+
+
+                                <td>
+
+                                    <span class="record-type">
+                                        {{ record.get_record_type_display }}
+                                    </span>
+
+                                </td>
+
+
+                                <td class="description-cell">
+
+                                    {% if record.description %}
+                                        {{ record.description }}
+                                    {% else %}
+                                        <span class="no-date">—</span>
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if record.medication %}
+                                        {{ record.medication }}
+                                    {% else %}
+                                        <span class="no-date">—</span>
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if record.veterinarian %}
+                                        {{ record.veterinarian }}
+                                    {% else %}
+                                        <span class="no-date">—</span>
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if record.next_due_date %}
+
+                                        <span class="due-date">
+                                            {{ record.next_due_date }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="no-date">
+                                            —
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td class="notes-cell">
+
+                                    {% if record.notes %}
+                                        {{ record.notes }}
+                                    {% else %}
+                                        <span class="no-date">—</span>
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="record-actions">
+
+                                        <a
+                                            href="{% url 'edit_health_record' record.id %}"
+                                            class="record-action-btn edit-record-btn"
+                                        >
+                                            ✏️ Edit
+                                        </a>
+
+                                        <a
+                                            href="{% url 'delete_health_record' record.id %}"
+                                            class="record-action-btn delete-record-btn"
+                                        >
+                                            🗑️ Delete
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="health-info-box">
+
+                <strong>
+                    🩺 Health Management
+                </strong>
+
+                <p>
+                    Keep vaccinations, treatments, veterinary visits and follow-up dates
+                    up to date so you can maintain a complete health history for this animal.
+                </p>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🩺
+                </div>
+
+                <h3>
+                    No Health Records
+                </h3>
+
+                <p>
+                    No health records have been added for
+                    <strong>{{ animal.animal_id }}</strong> yet.
+                    Start building this animal's veterinary history by adding its first record.
+                </p>
+
+                <a
+                    href="{% url 'add_health_record' animal.animal_id %}"
+                    class="empty-add-btn"
+                >
+                    ➕ Add First Health Record
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         BACK TO ANIMAL
+    ====================================================== -->
+
+    <a
+        href="{% url 'animal_detail' animal.animal_id %}"
+        style="
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            color:#1b5e20;
+            text-decoration:none;
+            font-weight:600;
+            margin:3px 0 25px;
+        "
+    >
+        ← Back to {{ animal.animal_id }}
+    </a>
+
+</div>
+
+{% endblock %}

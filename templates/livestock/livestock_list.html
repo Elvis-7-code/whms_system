@@ -1,0 +1,857 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Livestock - GATHOGO FARM{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    /* =========================
+       PAGE HEADER
+    ========================= */
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        color: #1b5e20;
+        font-size: 30px;
+    }
+
+    .page-header p {
+        margin: 6px 0 0;
+        color: #777;
+    }
+
+
+    /* =========================
+       TOP ACTIONS
+    ========================= */
+
+    .top-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .animal-count {
+        color: #555;
+        font-size: 15px;
+    }
+
+    .add-button {
+        background: #1b5e20;
+        color: white;
+        padding: 11px 18px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .add-button:hover {
+        background: #2e7d32;
+    }
+
+
+    /* =========================
+       STATISTICS
+    ========================= */
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border-left: 5px solid #2e7d32;
+    }
+
+    .stat-card h3 {
+        margin: 0 0 8px;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .stat-card .number {
+        font-size: 28px;
+        font-weight: bold;
+        color: #1b5e20;
+    }
+
+    .stat-icon {
+        font-size: 23px;
+        margin-bottom: 7px;
+    }
+
+    .active-stat {
+        border-left-color: #2e7d32;
+    }
+
+    .male-stat {
+        border-left-color: #1565c0;
+    }
+
+    .female-stat {
+        border-left-color: #8e24aa;
+    }
+
+    .sold-stat {
+        border-left-color: #ef6c00;
+    }
+
+
+    /* =========================
+       SEARCH / FILTER CARD
+    ========================= */
+
+    .filter-card {
+        background: white;
+        padding: 22px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .filter-card h2 {
+        margin: 0 0 15px;
+        color: #2e7d32;
+        font-size: 19px;
+    }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: minmax(200px, 1.5fr) repeat(3, minmax(140px, 1fr)) auto auto;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .filter-input,
+    .filter-select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px 12px;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        background: white;
+        font-size: 14px;
+    }
+
+    .filter-input:focus,
+    .filter-select:focus {
+        outline: none;
+        border-color: #2e7d32;
+    }
+
+    .search-button {
+        padding: 11px 18px;
+        background: #1b5e20;
+        color: white;
+        border: none;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .search-button:hover {
+        background: #2e7d32;
+    }
+
+    .reset-button {
+        padding: 11px 18px;
+        background: #e0e0e0;
+        color: #333;
+        border-radius: 7px;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .reset-button:hover {
+        background: #d5d5d5;
+    }
+
+
+    /* =========================
+       TABLE CARD
+    ========================= */
+
+    .table-card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .table-header h2 {
+        margin: 0;
+        color: #2e7d32;
+        font-size: 21px;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .livestock-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 850px;
+    }
+
+    .livestock-table th {
+        background: #f4f6f8;
+        color: #555;
+        padding: 13px 12px;
+        text-align: left;
+        font-size: 13px;
+        border-bottom: 2px solid #e5e5e5;
+    }
+
+    .livestock-table td {
+        padding: 13px 12px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+    }
+
+    .livestock-table tr:hover {
+        background: #fafafa;
+    }
+
+
+    /* =========================
+       ANIMAL ID
+    ========================= */
+
+    .animal-link {
+        color: #1b5e20;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .animal-link:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =========================
+       SPECIES
+    ========================= */
+
+    .species {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    .status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .status-active {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .status-sold {
+        background: #fff3e0;
+        color: #ef6c00;
+    }
+
+    .status-deceased {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+
+    /* =========================
+       ACTIONS
+    ========================= */
+
+    .action-buttons {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    .action-button {
+        padding: 6px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .view-button {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .edit-button {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+
+    .delete-button {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .action-button:hover {
+        opacity: 0.8;
+    }
+
+
+    /* =========================
+       EMPTY STATE
+    ========================= */
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #777;
+    }
+
+    .empty-icon {
+        font-size: 50px;
+        margin-bottom: 10px;
+    }
+
+    .empty-state h3 {
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        margin-bottom: 20px;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 1000px) {
+
+        .filter-form {
+            grid-template-columns: 1fr 1fr;
+        }
+
+    }
+
+    @media (max-width: 600px) {
+
+        .filter-form {
+            grid-template-columns: 1fr;
+        }
+
+        .page-header h1 {
+            font-size: 25px;
+        }
+
+        .table-card,
+        .filter-card {
+            padding: 18px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<div class="page-header">
+
+    <h1>🐄 Livestock Management</h1>
+
+    <p>
+        Manage and monitor all animals in your farm.
+    </p>
+
+</div>
+
+
+<!-- =========================
+     ACTIONS
+========================= -->
+
+<div class="top-actions">
+
+    <div class="animal-count">
+
+        Showing
+        <strong>{{ animals|length }}</strong>
+        animal{{ animals|length|pluralize }}
+
+    </div>
+
+    <a
+        href="{% url 'add_animal' %}"
+        class="add-button"
+    >
+        ➕ Add Animal
+    </a>
+
+</div>
+
+
+<!-- =========================
+     HERD STATISTICS
+========================= -->
+
+<div class="stats-grid">
+
+    <div class="stat-card active-stat">
+
+        <div class="stat-icon">🟢</div>
+
+        <h3>Active Livestock</h3>
+
+        <div class="number">
+            {{ active_count|default:"0" }}
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">🐄</div>
+
+        <h3>Cows</h3>
+
+        <div class="number">
+            {{ cow_count|default:"0" }}
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">🐐</div>
+
+        <h3>Goats</h3>
+
+        <div class="number">
+            {{ goat_count|default:"0" }}
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon">🐑</div>
+
+        <h3>Sheep</h3>
+
+        <div class="number">
+            {{ sheep_count|default:"0" }}
+        </div>
+
+    </div>
+
+
+    <div class="stat-card male-stat">
+
+        <div class="stat-icon">♂️</div>
+
+        <h3>Male</h3>
+
+        <div class="number">
+            {{ male_count|default:"0" }}
+        </div>
+
+    </div>
+
+
+    <div class="stat-card female-stat">
+
+        <div class="stat-icon">♀️</div>
+
+        <h3>Female</h3>
+
+        <div class="number">
+            {{ female_count|default:"0" }}
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     SEARCH / FILTER
+========================= -->
+
+<div class="filter-card">
+
+    <h2>🔎 Search & Filter Livestock</h2>
+
+    <form
+        method="get"
+        class="filter-form"
+    >
+
+        <input
+            type="text"
+            name="q"
+            value="{{ request.GET.q }}"
+            placeholder="Search ID or breed..."
+            class="filter-input"
+        >
+
+
+        <select
+            name="species"
+            class="filter-select"
+        >
+
+            <option value="">All Species</option>
+
+            <option
+                value="COW"
+                {% if request.GET.species == 'COW' %}selected{% endif %}
+            >
+                🐄 Cows
+            </option>
+
+            <option
+                value="GOAT"
+                {% if request.GET.species == 'GOAT' %}selected{% endif %}
+            >
+                🐐 Goats
+            </option>
+
+            <option
+                value="SHEEP"
+                {% if request.GET.species == 'SHEEP' %}selected{% endif %}
+            >
+                🐑 Sheep
+            </option>
+
+        </select>
+
+
+        <select
+            name="sex"
+            class="filter-select"
+        >
+
+            <option value="">All Sexes</option>
+
+            <option
+                value="MALE"
+                {% if request.GET.sex == 'MALE' %}selected{% endif %}
+            >
+                ♂️ Male
+            </option>
+
+            <option
+                value="FEMALE"
+                {% if request.GET.sex == 'FEMALE' %}selected{% endif %}
+            >
+                ♀️ Female
+            </option>
+
+        </select>
+
+
+        <select
+            name="status"
+            class="filter-select"
+        >
+
+            <option value="">All Status</option>
+
+            <option
+                value="ACTIVE"
+                {% if request.GET.status == 'ACTIVE' %}selected{% endif %}
+            >
+                🟢 Active
+            </option>
+
+            <option
+                value="SOLD"
+                {% if request.GET.status == 'SOLD' %}selected{% endif %}
+            >
+                🟠 Sold
+            </option>
+
+            <option
+                value="DECEASED"
+                {% if request.GET.status == 'DECEASED' %}selected{% endif %}
+            >
+                🔴 Deceased
+            </option>
+
+        </select>
+
+
+        <button
+            type="submit"
+            class="search-button"
+        >
+            🔍 Search
+        </button>
+
+
+        <a
+            href="{% url 'livestock_list' %}"
+            class="reset-button"
+        >
+            Reset
+        </a>
+
+    </form>
+
+</div>
+
+
+<!-- =========================
+     LIVESTOCK TABLE
+========================= -->
+
+<div class="table-card">
+
+    <div class="table-header">
+
+        <h2>All Livestock</h2>
+
+    </div>
+
+
+    {% if animals %}
+
+    <div class="table-wrapper">
+
+        <table class="livestock-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Animal ID</th>
+                    <th>Species</th>
+                    <th>Breed</th>
+                    <th>Sex</th>
+                    <th>Date of Birth</th>
+                    <th>Weight</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for animal in animals %}
+
+                <tr>
+
+                    <!-- ANIMAL ID -->
+
+                    <td>
+
+                        <a
+                            href="{% url 'animal_detail' animal.animal_id %}"
+                            class="animal-link"
+                        >
+                            {{ animal.animal_id }}
+                        </a>
+
+                    </td>
+
+
+                    <!-- SPECIES -->
+
+                    <td>
+
+                        <span class="species">
+
+                            {% if animal.species == 'COW' %}
+                                🐄
+                            {% elif animal.species == 'GOAT' %}
+                                🐐
+                            {% elif animal.species == 'SHEEP' %}
+                                🐑
+                            {% endif %}
+
+                            {{ animal.get_species_display }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- BREED -->
+
+                    <td>
+                        {{ animal.breed|default:"-" }}
+                    </td>
+
+
+                    <!-- SEX -->
+
+                    <td>
+                        {{ animal.get_sex_display }}
+                    </td>
+
+
+                    <!-- DATE OF BIRTH -->
+
+                    <td>
+                        {{ animal.date_of_birth|date:"d M Y"|default:"-" }}
+                    </td>
+
+
+                    <!-- WEIGHT -->
+
+                    <td>
+
+                        {% if animal.weight %}
+                            {{ animal.weight }} kg
+                        {% else %}
+                            -
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        {% if animal.status == 'ACTIVE' %}
+
+                            <span class="status status-active">
+                                Active
+                            </span>
+
+                        {% elif animal.status == 'SOLD' %}
+
+                            <span class="status status-sold">
+                                Sold
+                            </span>
+
+                        {% elif animal.status == 'DECEASED' %}
+
+                            <span class="status status-deceased">
+                                Deceased
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ACTIONS -->
+
+                    <td>
+
+                        <div class="action-buttons">
+
+                            <a
+                                href="{% url 'animal_detail' animal.animal_id %}"
+                                class="action-button view-button"
+                            >
+                                View
+                            </a>
+
+
+                            <a
+                                href="{% url 'edit_animal' animal.animal_id %}"
+                                class="action-button edit-button"
+                            >
+                                Edit
+                            </a>
+
+
+                            <a
+                                href="{% url 'delete_animal' animal.animal_id %}"
+                                class="action-button delete-button"
+                                onclick="return confirm('Are you sure you want to delete this animal?');"
+                            >
+                                Delete
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-icon">🐄</div>
+
+        <h3>No livestock found</h3>
+
+        <p>
+            No animals match your current search or filter.
+        </p>
+
+        <a
+            href="{% url 'add_animal' %}"
+            class="add-button"
+        >
+            ➕ Add Animal
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

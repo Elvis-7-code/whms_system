@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Breeding Record - {{ animal.animal_id }} | WAHOME HERD</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background: #f4f7f5;
+            color: #263238;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: white;
+            padding: 28px 30px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+        }
+
+        .header-content {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 7px 0 0;
+            opacity: 0.9;
+            font-size: 15px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 850px;
+            margin: 30px auto 50px;
+        }
+
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 22px;
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h2 {
+            margin: 0;
+            color: #1b5e20;
+            font-size: 27px;
+        }
+
+        .page-title p {
+            margin: 7px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .animal-banner {
+            background: white;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 22px;
+            border-left: 5px solid #2e7d32;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+        }
+
+        .animal-banner strong {
+            color: #1b5e20;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+            border: 1px solid #edf1ee;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #455a64;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #cfd8d3;
+            border-radius: 7px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #263238;
+            background: white;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46,125,50,0.10);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .help-text {
+            margin-top: 5px;
+            color: #78909c;
+            font-size: 12px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #edf1ee;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 18px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .save-button {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .save-button:hover {
+            background: #1b5e20;
+        }
+
+        .cancel-button {
+            background: #eceff1;
+            color: #455a64;
+        }
+
+        .cancel-button:hover {
+            background: #cfd8dc;
+        }
+
+        @media (max-width: 650px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .actions {
+                flex-direction: column-reverse;
+            }
+
+            .actions .button {
+                width: 100%;
+            }
+
+            .header {
+                padding: 22px 18px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="header-content">
+            <h1>🐄 WAHOME HERD</h1>
+            <p>Breeding & Reproduction Management</p>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <a
+            href="{% url 'breeding_records' animal.animal_id %}"
+            class="back"
+        >
+            ← Back to Breeding Records
+        </a>
+
+        <div class="page-title">
+            <h2>Edit Breeding Record</h2>
+
+            <p>
+                Update the breeding information for
+                <strong>{{ animal.animal_id }}</strong>.
+            </p>
+        </div>
+
+        <div class="animal-banner">
+
+            <div>
+                Animal:
+                <strong>{{ animal.animal_id }}</strong>
+            </div>
+
+            <div style="margin-top:6px; color:#6b7280; font-size:13px;">
+                {{ animal.get_species_display }}
+
+                {% if animal.breed %}
+                    • {{ animal.breed }}
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="form-card">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="form-grid">
+
+                    <!-- MALE -->
+
+                    <div class="form-group full">
+
+                        <label for="male">
+                            Male Animal
+                        </label>
+
+                        <select
+                            name="male"
+                            id="male"
+                        >
+
+                            <option value="">
+                                Not specified
+                            </option>
+
+                            {% for male in male_animals %}
+
+                                <option
+                                    value="{{ male.animal_id }}"
+                                    {% if record.male and record.male.animal_id == male.animal_id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ male.animal_id }}
+                                    -
+                                    {{ male.get_species_display }}
+                                    {% if male.breed %}
+                                        • {{ male.breed }}
+                                    {% endif %}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <div class="help-text">
+                            Select the male involved in the breeding event.
+                        </div>
+
+                    </div>
+
+
+                    <!-- BREEDING DATE -->
+
+                    <div class="form-group">
+
+                        <label for="breeding_date">
+                            Breeding Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="breeding_date"
+                            id="breeding_date"
+                            value="{{ record.breeding_date|date:'Y-m-d' }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- EXPECTED BIRTH -->
+
+                    <div class="form-group">
+
+                        <label for="expected_birth_date">
+                            Expected Birth Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="expected_birth_date"
+                            id="expected_birth_date"
+                            value="{% if record.expected_birth_date %}{{ record.expected_birth_date|date:'Y-m-d' }}{% endif %}"
+                        >
+
+                    </div>
+
+
+                    <!-- ACTUAL BIRTH -->
+
+                    <div class="form-group">
+
+                        <label for="actual_birth_date">
+                            Actual Birth Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="actual_birth_date"
+                            id="actual_birth_date"
+                            value="{% if record.actual_birth_date %}{{ record.actual_birth_date|date:'Y-m-d' }}{% endif %}"
+                        >
+
+                    </div>
+
+
+                    <!-- OFFSPRING -->
+
+                    <div class="form-group">
+
+                        <label for="offspring_count">
+                            Offspring Count
+                        </label>
+
+                        <input
+                            type="number"
+                            name="offspring_count"
+                            id="offspring_count"
+                            min="0"
+                            value="{% if record.offspring_count != None %}{{ record.offspring_count }}{% endif %}"
+                        >
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="form-group full">
+
+                        <label for="status">
+                            Breeding Status
+                        </label>
+
+                        <select
+                            name="status"
+                            id="status"
+                            required
+                        >
+
+                            <option
+                                value="PLANNED"
+                                {% if record.status == 'PLANNED' %}selected{% endif %}
+                            >
+                                Planned
+                            </option>
+
+                            <option
+                                value="PREGNANT"
+                                {% if record.status == 'PREGNANT' %}selected{% endif %}
+                            >
+                                Pregnant
+                            </option>
+
+                            <option
+                                value="SUCCESSFUL"
+                                {% if record.status == 'SUCCESSFUL' %}selected{% endif %}
+                            >
+                                Successful
+                            </option>
+
+                            <option
+                                value="FAILED"
+                                {% if record.status == 'FAILED' %}selected{% endif %}
+                            >
+                                Failed
+                            </option>
+
+                            <option
+                                value="BORN"
+                                {% if record.status == 'BORN' %}selected{% endif %}
+                            >
+                                Birth Recorded
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- NOTES -->
+
+                    <div class="form-group full">
+
+                        <label for="notes">
+                            Breeding Notes
+                        </label>
+
+                        <textarea
+                            name="notes"
+                            id="notes"
+                            placeholder="Enter any additional breeding notes..."
+                        >{{ record.notes }}</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="actions">
+
+                    <a
+                        href="{% url 'breeding_records' animal.animal_id %}"
+                        class="button cancel-button"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="button save-button"
+                    >
+                        💾 Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

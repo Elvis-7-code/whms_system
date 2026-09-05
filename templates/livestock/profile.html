@@ -1,0 +1,179 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}
+My Profile - WAHOME HERD
+{% endblock %}
+
+{% block content %}
+
+<div style="
+    max-width: 800px;
+    margin: 0 auto;
+">
+
+    <div style="
+        background: white;
+        border-radius: 14px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    ">
+
+        <h1 style="
+            margin-top: 0;
+            color: #166534;
+        ">
+            👤 My Profile
+        </h1>
+
+        <p style="color: #6b7280;">
+            Your WAHOME HERD account information.
+        </p>
+
+
+        <div style="
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f0fdf4;
+            border-radius: 12px;
+        ">
+
+            <div style="
+                width: 70px;
+                height: 70px;
+                border-radius: 50%;
+                background: #166534;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 28px;
+                font-weight: bold;
+            ">
+                {{ user.username|first|upper }}
+            </div>
+
+            <div>
+
+                <h2 style="margin: 0;">
+                    {% if user.get_full_name %}
+                        {{ user.get_full_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+                </h2>
+
+                <p style="
+                    margin: 5px 0 0;
+                    color: #6b7280;
+                ">
+                    @{{ user.username }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        ">
+
+            <div style="
+                padding: 18px;
+                background: #f9fafb;
+                border-radius: 10px;
+            ">
+                <strong>Username</strong>
+                <div style="margin-top: 6px;">
+                    {{ user.username }}
+                </div>
+            </div>
+
+
+            <div style="
+                padding: 18px;
+                background: #f9fafb;
+                border-radius: 10px;
+            ">
+                <strong>Email</strong>
+                <div style="margin-top: 6px;">
+                    {{ user.email|default:"Not provided" }}
+                </div>
+            </div>
+
+
+            <div style="
+                padding: 18px;
+                background: #f9fafb;
+                border-radius: 10px;
+            ">
+                <strong>First Name</strong>
+                <div style="margin-top: 6px;">
+                    {{ user.first_name|default:"Not provided" }}
+                </div>
+            </div>
+
+
+            <div style="
+                padding: 18px;
+                background: #f9fafb;
+                border-radius: 10px;
+            ">
+                <strong>Last Name</strong>
+                <div style="margin-top: 6px;">
+                    {{ user.last_name|default:"Not provided" }}
+                </div>
+            </div>
+
+
+            <div style="
+                padding: 18px;
+                background: #f9fafb;
+                border-radius: 10px;
+            ">
+                <strong>Account Status</strong>
+                <div style="
+                    margin-top: 6px;
+                    color: #166534;
+                    font-weight: bold;
+                ">
+                    {% if user.is_active %}
+                        Active
+                    {% else %}
+                        Inactive
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div style="
+                padding: 18px;
+                background: #f9fafb;
+                border-radius: 10px;
+            ">
+                <strong>Role</strong>
+                <div style="margin-top: 6px;">
+
+                    {% if user.is_superuser %}
+                        Administrator
+                    {% elif user.groups.all %}
+                        {{ user.groups.first.name }}
+                    {% else %}
+                        Farm User
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

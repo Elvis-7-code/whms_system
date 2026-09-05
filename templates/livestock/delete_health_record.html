@@ -1,0 +1,308 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Delete Health Record - {{ animal.animal_id }}{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .delete-page {
+        max-width: 750px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        color: #b71c1c;
+        font-size: 30px;
+    }
+
+    .page-header p {
+        margin-top: 8px;
+        color: #666;
+    }
+
+    .delete-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        border-top: 5px solid #d32f2f;
+    }
+
+    .warning-box {
+        background: #ffebee;
+        border: 1px solid #ef9a9a;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .warning-box h2 {
+        margin: 0 0 10px;
+        color: #b71c1c;
+        font-size: 21px;
+    }
+
+    .warning-box p {
+        margin: 0;
+        color: #5f2120;
+        line-height: 1.6;
+    }
+
+    .record-details {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .record-details h3 {
+        margin: 0 0 15px;
+        color: #333;
+        font-size: 18px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 11px 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .detail-value {
+        color: #333;
+        text-align: right;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 11px 20px;
+        border-radius: 7px;
+        text-decoration: none;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .btn-cancel {
+        background: #eeeeee;
+        color: #333;
+    }
+
+    .btn-cancel:hover {
+        background: #e0e0e0;
+    }
+
+    .btn-delete {
+        background: #d32f2f;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background: #b71c1c;
+    }
+
+    @media (max-width: 600px) {
+
+        .delete-card {
+            padding: 20px;
+        }
+
+        .detail-row {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .detail-value {
+            text-align: left;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="delete-page">
+
+    <div class="page-header">
+
+        <h1>Delete Health Record</h1>
+
+        <p>
+            Review the record before confirming deletion.
+        </p>
+
+    </div>
+
+
+    <div class="delete-card">
+
+        <div class="warning-box">
+
+            <h2>⚠️ Are you sure?</h2>
+
+            <p>
+                You are about to permanently delete this health record.
+                This action cannot be undone.
+            </p>
+
+        </div>
+
+
+        <div class="record-details">
+
+            <h3>Health Record Details</h3>
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Animal ID
+                </span>
+
+                <span class="detail-value">
+                    {{ animal.animal_id }}
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Record Type
+                </span>
+
+                <span class="detail-value">
+                    {{ record.get_record_type_display }}
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Date
+                </span>
+
+                <span class="detail-value">
+                    {{ record.date|date:"d M Y" }}
+                </span>
+
+            </div>
+
+
+            {% if record.next_due_date %}
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Next Due Date
+                </span>
+
+                <span class="detail-value">
+                    {{ record.next_due_date|date:"d M Y" }}
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if record.veterinarian %}
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Veterinarian
+                </span>
+
+                <span class="detail-value">
+                    {{ record.veterinarian }}
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Description
+                </span>
+
+                <span class="detail-value">
+                    {{ record.description }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="action-buttons">
+
+                <a
+                    href="{% url 'health_records' animal.animal_id %}"
+                    class="btn btn-cancel"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-delete"
+                >
+                    🗑️ Delete Record
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

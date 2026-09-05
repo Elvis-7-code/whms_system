@@ -1,0 +1,175 @@
+{% extends 'livestock/base.html' %}
+
+{% block title %}Delete Production Record - WAHOME HERD{% endblock %}
+
+{% block extra_css %}
+
+<style>
+    .page-container {
+        max-width: 650px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        color: #b71c1c;
+        font-size: 30px;
+    }
+
+    .page-header p {
+        margin-top: 8px;
+        color: #6b756e;
+    }
+
+    .confirmation-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .warning {
+        background: #fff3f3;
+        border-left: 4px solid #c62828;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+        color: #6d2020;
+    }
+
+    .record-details {
+        background: #f0f4f1;
+        padding: 18px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+    }
+
+    .record-details p {
+        margin: 8px 0;
+        color: #445048;
+    }
+
+    .record-details strong {
+        color: #1b5e20;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 11px 20px;
+        border-radius: 7px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .delete-button {
+        background: #c62828;
+        color: white;
+    }
+
+    .delete-button:hover {
+        background: #a51f1f;
+    }
+
+    .cancel-button {
+        background: #eef1ef;
+        color: #445048;
+    }
+
+    .cancel-button:hover {
+        background: #e1e6e2;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+```
+<div class="page-header">
+    <h1>Delete Production Record</h1>
+    <p>Confirm that you want to remove this production record.</p>
+</div>
+
+<div class="confirmation-card">
+
+    <div class="warning">
+        <strong>Warning:</strong>
+        This action cannot be undone.
+    </div>
+
+    <div class="record-details">
+
+        <p>
+            <strong>Animal:</strong>
+            {{ animal.animal_id }}
+        </p>
+
+        <p>
+            <strong>Production Type:</strong>
+            {{ record.get_production_type_display }}
+        </p>
+
+        <p>
+            <strong>Date:</strong>
+            {{ record.date }}
+        </p>
+
+        <p>
+            <strong>Quantity:</strong>
+            {{ record.quantity }}
+            {{ record.unit }}
+        </p>
+
+        {% if record.notes %}
+        <p>
+            <strong>Notes:</strong>
+            {{ record.notes }}
+        </p>
+        {% endif %}
+
+    </div>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <div class="form-actions">
+
+            <button
+                type="submit"
+                class="button delete-button"
+            >
+                Yes, Delete Record
+            </button>
+
+            <a
+                href="{% url 'production_records' animal.animal_id %}"
+                class="button cancel-button"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

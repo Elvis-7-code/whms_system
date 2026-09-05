@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Production Record - {{ animal.animal_id }}</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #333;
+        }
+
+        .header {
+            background: #1b5e20;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #1b5e20;
+        }
+
+        .animal-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+
+        .animal-info strong {
+            color: #1b5e20;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #333;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2e7d32;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button,
+        .cancel-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        button {
+            background: #2e7d32;
+            color: white;
+        }
+
+        button:hover {
+            background: #1b5e20;
+        }
+
+        .cancel-button {
+            background: #757575;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>WAHOME HERD</h1>
+        <p>Production Management</p>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h2>Add Production Record</h2>
+
+            <div class="animal-info">
+                Animal ID:
+                <strong>{{ animal.animal_id }}</strong>
+                &nbsp; | &nbsp;
+                Species:
+                <strong>{{ animal.get_species_display }}</strong>
+            </div>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="production_type">
+                        Production Type
+                    </label>
+
+                    <select
+                        name="production_type"
+                        id="production_type"
+                        required
+                    >
+                        <option value="">-- Select Type --</option>
+                        <option value="MILK">Milk</option>
+                        <option value="WEIGHT">Weight</option>
+                        <option value="MEAT">Meat</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="date">
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="date"
+                        id="date"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="quantity">
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        name="quantity"
+                        id="quantity"
+                        step="0.01"
+                        min="0"
+                        placeholder="e.g. 12.50"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="unit">
+                        Unit
+                    </label>
+
+                    <input
+                        type="text"
+                        name="unit"
+                        id="unit"
+                        placeholder="e.g. litres, kg"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="notes">
+                        Notes
+                    </label>
+
+                    <textarea
+                        name="notes"
+                        id="notes"
+                        placeholder="Enter any additional information..."
+                    ></textarea>
+                </div>
+
+
+                <div class="buttons">
+
+                    <button type="submit">
+                        Save Production Record
+                    </button>
+
+                    <a
+                        href="{% url 'production_records' animal.animal_id %}"
+                        class="cancel-button"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

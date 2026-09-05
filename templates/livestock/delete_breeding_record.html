@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delete Breeding Record - {{ animal.animal_id }} | WAHOME HERD</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background: #f4f7f5;
+            color: #263238;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: white;
+            padding: 28px 30px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+        }
+
+        .header-content {
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 7px 0 0;
+            opacity: 0.9;
+            font-size: 15px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 750px;
+            margin: 45px auto 50px;
+        }
+
+        .confirmation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            border: 1px solid #edf1ee;
+            text-align: center;
+        }
+
+        .warning-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #ffebee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            color: #b71c1c;
+            font-size: 25px;
+        }
+
+        .intro {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .record-summary {
+            text-align: left;
+            background: #f8faf9;
+            border: 1px solid #edf1ee;
+            border-radius: 9px;
+            padding: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 9px 0;
+            border-bottom: 1px solid #e5e9e6;
+            font-size: 14px;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #6b7280;
+            font-weight: bold;
+        }
+
+        .summary-value {
+            color: #263238;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .danger-message {
+            background: #fff5f5;
+            border: 1px solid #ffcdd2;
+            border-radius: 8px;
+            padding: 13px 15px;
+            color: #b71c1c;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 20px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cancel-button {
+            background: #eceff1;
+            color: #455a64;
+        }
+
+        .cancel-button:hover {
+            background: #cfd8dc;
+        }
+
+        .delete-button {
+            background: #c62828;
+            color: white;
+        }
+
+        .delete-button:hover {
+            background: #b71c1c;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 22px 18px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .confirmation-card {
+                padding: 25px 18px;
+            }
+
+            .summary-row {
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .summary-value {
+                text-align: left;
+            }
+
+            .actions {
+                flex-direction: column-reverse;
+            }
+
+            .actions .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="header-content">
+            <h1>🐄 WAHOME HERD</h1>
+            <p>Breeding & Reproduction Management</p>
+        </div>
+    </div>
+
+
+    <div class="container">
+
+        <div class="confirmation-card">
+
+            <div class="warning-icon">
+                🗑️
+            </div>
+
+            <h2>
+                Delete Breeding Record?
+            </h2>
+
+            <p class="intro">
+                You are about to permanently delete this breeding
+                record. This action cannot be undone.
+            </p>
+
+
+            <div class="record-summary">
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Female
+                    </span>
+
+                    <span class="summary-value">
+                        {{ animal.animal_id }}
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Male
+                    </span>
+
+                    <span class="summary-value">
+
+                        {% if record.male %}
+                            {{ record.male.animal_id }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Breeding Date
+                    </span>
+
+                    <span class="summary-value">
+                        {{ record.breeding_date }}
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Status
+                    </span>
+
+                    <span class="summary-value">
+                        {{ record.get_status_display }}
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Expected Birth
+                    </span>
+
+                    <span class="summary-value">
+
+                        {% if record.expected_birth_date %}
+                            {{ record.expected_birth_date }}
+                        {% else %}
+                            Not recorded
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Offspring
+                    </span>
+
+                    <span class="summary-value">
+
+                        {% if record.offspring_count != None %}
+                            {{ record.offspring_count }}
+                        {% else %}
+                            Not recorded
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="danger-message">
+                ⚠️ Deleting this record will remove it from the
+                breeding history and related breeding statistics.
+            </div>
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="actions">
+
+                    <a
+                        href="{% url 'breeding_records' animal.animal_id %}"
+                        class="button cancel-button"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="button delete-button"
+                    >
+                        🗑️ Yes, Delete Record
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

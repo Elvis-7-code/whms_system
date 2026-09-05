@@ -1,0 +1,282 @@
+```html
+{% extends 'livestock/base.html' %}
+
+{% block title %}Add Animal - WAHOME HERD{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>➕ Add Animal</h1>
+    <p>Register a new animal in your farm</p>
+</div>
+
+<div class="card" style="max-width:800px;">
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <!-- ANIMAL ID -->
+        <div style="margin-bottom:18px;">
+            <label>
+                <strong>Animal ID</strong>
+            </label>
+
+            <input
+                type="text"
+                name="animal_id"
+                required
+                placeholder="e.g. COW001"
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+        </div>
+
+
+        <!-- SPECIES -->
+        <div style="margin-bottom:18px;">
+            <label>
+                <strong>Species</strong>
+            </label>
+
+            <select
+                name="species"
+                required
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+                <option value="">Select species</option>
+                <option value="COW">Cow</option>
+                <option value="GOAT">Goat</option>
+                <option value="SHEEP">Sheep</option>
+            </select>
+        </div>
+
+
+        <!-- BREED -->
+        <div style="margin-bottom:18px;">
+            <label>
+                <strong>Breed</strong>
+            </label>
+
+            <input
+                type="text"
+                name="breed"
+                placeholder="e.g. Friesian"
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+        </div>
+
+
+        <!-- SEX -->
+        <div style="margin-bottom:18px;">
+            <label>
+                <strong>Sex</strong>
+            </label>
+
+            <select
+                name="sex"
+                required
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+                <option value="">Select sex</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+            </select>
+        </div>
+
+
+        <!-- DATE OF BIRTH -->
+        <div style="margin-bottom:18px;">
+            <label>
+                <strong>Date of Birth</strong>
+            </label>
+
+            <input
+                type="date"
+                name="date_of_birth"
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+        </div>
+
+
+        <!-- COLOUR -->
+        <div style="margin-bottom:18px;">
+            <label>
+                <strong>Colour</strong>
+            </label>
+
+            <input
+                type="text"
+                name="colour"
+                placeholder="e.g. Black and white"
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+        </div>
+
+
+        <!-- WEIGHT -->
+        <div style="margin-bottom:18px;">
+            <label>
+                <strong>Weight (kg)</strong>
+            </label>
+
+            <input
+                type="number"
+                name="weight"
+                step="0.01"
+                min="0"
+                placeholder="e.g. 350"
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+        </div>
+
+
+        <!-- DATE ACQUIRED -->
+        <div style="margin-bottom:18px;">
+            <label>
+                <strong>Date Acquired</strong>
+            </label>
+
+            <input
+                type="date"
+                name="date_acquired"
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+        </div>
+
+
+        <!-- STATUS -->
+        <div style="margin-bottom:18px;">
+            <label>
+                <strong>Status</strong>
+            </label>
+
+            <select
+                name="status"
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                "
+            >
+                <option value="ACTIVE">Active</option>
+                <option value="SOLD">Sold</option>
+                <option value="DECEASED">Deceased</option>
+            </select>
+        </div>
+
+
+        <!-- NOTES -->
+        <div style="margin-bottom:25px;">
+            <label>
+                <strong>Notes</strong>
+            </label>
+
+            <textarea
+                name="notes"
+                rows="4"
+                placeholder="Additional information about the animal..."
+                style="
+                    width:100%;
+                    padding:11px;
+                    margin-top:6px;
+                    border:1px solid #ccc;
+                    border-radius:6px;
+                    resize:vertical;
+                "
+            ></textarea>
+        </div>
+
+
+        <!-- BUTTONS -->
+        <div style="
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        ">
+
+            <button
+                type="submit"
+                style="
+                    background:#1b5e20;
+                    color:white;
+                    border:none;
+                    padding:12px 20px;
+                    border-radius:6px;
+                    cursor:pointer;
+                    font-weight:bold;
+                "
+            >
+                💾 Save Animal
+            </button>
+
+            <a
+                href="{% url 'livestock_list' %}"
+                style="
+                    background:#e0e0e0;
+                    color:#333;
+                    padding:12px 20px;
+                    border-radius:6px;
+                    text-decoration:none;
+                "
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
+```
