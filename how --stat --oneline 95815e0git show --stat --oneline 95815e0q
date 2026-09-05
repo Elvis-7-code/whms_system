@@ -1,0 +1,33 @@
+[33m9a89985[m Implemented and created files in the Project Structure
+ index.html                        |  0
+ package.json                      |  0
+ src/App.jsx                       |  0
+ src/api/client.js                 | 36 [32m+++++++++++[m
+ src/context/AuthContext.jsx       |  0
+ src/main.jsx                      |  0
+ src/pages/alerts/Alerts.jsx       |  0
+ .../animals/AnimalDetail.jsx      |  0
+ src/pages/animals/AnimalsList.jsx |  0
+ src/pages/auth/Login.jsx          |  0
+ src/pages/auth/Signup.jsx         |  0
+ src/pages/breeding/Breeding.jsx   |  0
+ src/pages/dashboard/Dashboard.jsx |  0
+ src/pages/feed/Feed.jsx           |  0
+ src/pages/reports/Reports.jsx     |  0
+ src/pages/settings/Settings.jsx   |  0
+ src/pages/users/Users.jsx         |  0
+ .../vaccinations/Vaccinations.jsx |  0
+ src/routes/AppRoutes.jsx          |  0
+ src/routes/ProtectedRoute.jsx     |  0
+ src/routes/paths.js               |  0
+ src/services/alertService.js      |  0
+ src/services/animalService.js     |  0
+ src/services/authService.js       |  0
+ src/services/breedingService.js   |  0
+ src/services/feedService.js       |  0
+ src/services/reportService.js     |  0
+ src/services/userService.js       |  0
+ .../vaccinationService.js         |  0
+ src/styles/index.css              |  0
+ vite.config.js                    |  0
+ 31 files changed, 36 insertions(+)
