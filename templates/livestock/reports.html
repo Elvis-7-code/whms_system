@@ -1,3 +1,4 @@
+```html
 {% extends 'livestock/base.html' %}
 
 {% block title %}Reports & Analytics - WAHOME HERD{% endblock %}
@@ -6,495 +7,675 @@
 
 <style>
 
-    .report-header {
-        margin-bottom: 30px;
-    }
+/* =========================================================
+   PAGE HEADER
+========================================================= */
 
-    .report-header-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 25px;
-    }
+.report-header {
+    margin-bottom: 28px;
+}
 
-    .report-header h1 {
-        margin: 0;
-        font-size: 30px;
-        color: #1b5e20;
-    }
+.report-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 25px;
+}
 
-    .report-header p {
-        margin-top: 8px;
-        color: #6c7770;
-    }
+.report-header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    color: #1b5e20;
+}
 
-
-    /* ========================================================
-       REPORT EXPORT
-    ======================================================== */
-
-    .export-panel {
-        background: white;
-        border-radius: 14px;
-        padding: 22px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        border: 1px solid #e8eee9;
-    }
-
-    .export-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 18px;
-    }
-
-    .export-title {
-        margin: 0;
-        font-size: 19px;
-        color: #1b5e20;
-    }
-
-    .export-description {
-        margin: 5px 0 0;
-        color: #778078;
-        font-size: 13px;
-    }
-
-    .export-form {
-        display: flex;
-        align-items: flex-end;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .export-field {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        min-width: 240px;
-    }
-
-    .export-field label {
-        font-size: 12px;
-        font-weight: bold;
-        color: #536057;
-    }
-
-    .export-select {
-        height: 43px;
-        padding: 0 13px;
-        border: 1px solid #d8e1da;
-        border-radius: 8px;
-        background: #fff;
-        color: #354139;
-        font-size: 14px;
-        outline: none;
-    }
-
-    .export-select:focus {
-        border-color: #2f7548;
-        box-shadow: 0 0 0 3px rgba(47,117,72,0.10);
-    }
-
-    .export-buttons {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
-    .export-button {
-        height: 43px;
-        border: none;
-        border-radius: 8px;
-        padding: 0 17px;
-        font-size: 13px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.2s ease;
-    }
-
-    .export-button:hover {
-        transform: translateY(-1px);
-    }
-
-    .pdf-button {
-        background: #b3261e;
-        color: white;
-    }
-
-    .pdf-button:hover {
-        background: #972018;
-    }
-
-    .excel-button {
-        background: #217346;
-        color: white;
-    }
-
-    .excel-button:hover {
-        background: #1a5d38;
-    }
-
-    .csv-button {
-        background: #536878;
-        color: white;
-    }
-
-    .csv-button:hover {
-        background: #435663;
-    }
+.report-header p {
+    margin: 8px 0 0;
+    color: #6c7770;
+    font-size: 14px;
+    line-height: 1.6;
+}
 
 
-    /* ========================================================
-       REPORT SECTIONS
-    ======================================================== */
+/* =========================================================
+   EXPORT PANEL
+========================================================= */
 
-    .report-section {
-        margin-bottom: 30px;
-    }
+.export-panel {
+    background: #ffffff;
+    border: 1px solid #e5ebe6;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
 
-    .section-title {
-        font-size: 21px;
-        color: #1b5e20;
-        margin-bottom: 15px;
-    }
+.export-header {
+    margin-bottom: 20px;
+}
+
+.export-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1b5e20;
+}
+
+.export-description {
+    margin: 6px 0 0;
+    color: #778078;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.export-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.export-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 270px;
+}
+
+.export-field label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #536057;
+}
+
+.export-select {
+    width: 100%;
+    height: 44px;
+    padding: 0 13px;
+    border: 1px solid #d7e0d9;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #354139;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.export-select:hover {
+    border-color: #b9c9bc;
+}
+
+.export-select:focus {
+    border-color: #2f7548;
+    box-shadow: 0 0 0 3px rgba(47, 117, 72, 0.10);
+}
+
+.export-buttons {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+.export-button {
+    height: 44px;
+    border: none;
+    border-radius: 8px;
+    padding: 0 17px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.export-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
+}
+
+.export-button:active {
+    transform: translateY(0);
+}
+
+.pdf-button {
+    background: #b3261e;
+    color: #ffffff;
+}
+
+.pdf-button:hover {
+    background: #972018;
+}
+
+.excel-button {
+    background: #217346;
+    color: #ffffff;
+}
+
+.excel-button:hover {
+    background: #1a5d38;
+}
+
+.csv-button {
+    background: #536878;
+    color: #ffffff;
+}
+
+.csv-button:hover {
+    background: #435663;
+}
 
 
-    /* ========================================================
-       KPI CARDS
-    ======================================================== */
+/* =========================================================
+   REPORT SECTIONS
+========================================================= */
+
+.report-section {
+    margin-bottom: 32px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 21px;
+    font-weight: 700;
+    color: #1b5e20;
+}
+
+.section-title::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 22px;
+    border-radius: 4px;
+    background: #2f7548;
+}
+
+
+/* =========================================================
+   KPI CARDS
+========================================================= */
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.report-card {
+    background: #ffffff;
+    border: 1px solid #e7ece8;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #68736c;
+    margin-bottom: 9px;
+}
+
+.card-value {
+    font-size: 29px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #1b5e20;
+    word-break: break-word;
+}
+
+.card-subtitle {
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #7b847e;
+}
+
+
+/* =========================================================
+   REPORT BOXES
+========================================================= */
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+}
+
+.report-box {
+    background: #ffffff;
+    border: 1px solid #e7ece8;
+    padding: 20px 15px;
+    border-radius: 11px;
+    text-align: center;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.07);
+}
+
+.report-box h3 {
+    margin: 0 0 10px;
+    color: #6b756e;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.report-box p {
+    margin: 0;
+    font-size: 27px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #1b5e20;
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   ANALYTICS
+========================================================= */
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.chart-card {
+    min-width: 0;
+    background: #ffffff;
+    border: 1px solid #e7ece8;
+    border-radius: 12px;
+    padding: 21px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.chart-card h3 {
+    margin: 0 0 5px;
+    color: #1b5e20;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.chart-card p {
+    margin: 0 0 18px;
+    color: #7a837d;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.chart-container {
+    position: relative;
+    height: 320px;
+    width: 100%;
+}
+
+.full-chart {
+    grid-column: 1 / -1;
+}
+
+.full-chart .chart-container {
+    height: 380px;
+}
+
+
+/* =========================================================
+   PERFORMANCE
+========================================================= */
+
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.performance-card {
+    min-width: 0;
+    background: #ffffff;
+    border: 1px solid #e7ece8;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+.performance-card h3 {
+    margin: 0 0 5px;
+    color: #1b5e20;
+    font-size: 17px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.performance-card > p {
+    margin: 0 0 17px;
+    color: #7a837d;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.rank {
+    font-weight: 700;
+    color: #1b5e20;
+    width: 45px;
+}
+
+.performance-animal {
+    color: #2f7548;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.performance-animal:hover {
+    text-decoration: underline;
+}
+
+.performance-value {
+    font-weight: 700;
+    color: #1b5e20;
+    white-space: nowrap;
+}
+
+.species-badge {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 15px;
+    background: #edf5ef;
+    color: #2f7548;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   PROFITABILITY
+========================================================= */
+
+.profit-positive {
+    color: #1b5e20;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.profit-negative {
+    color: #b3261e;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLES
+========================================================= */
+
+.table-card {
+    background: #ffffff;
+    border: 1px solid #e7ece8;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f0f4f1;
+    color: #445048;
+    text-align: left;
+    padding: 13px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+td {
+    padding: 13px;
+    border-bottom: 1px solid #edf0ed;
+    font-size: 13px;
+    color: #4d5750;
+    vertical-align: middle;
+}
+
+tbody tr {
+    transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+    background: #fafcfb;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.animal-link {
+    color: #2f7548;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.animal-link:hover {
+    text-decoration: underline;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: #edf5ef;
+    color: #2f7548;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.empty {
+    text-align: center;
+    color: #888f8a;
+    padding: 30px 20px;
+    font-size: 13px;
+    background: #fafbfa;
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
 
     .card-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
     }
-
-    .report-card {
-        background: white;
-        border-radius: 12px;
-        padding: 22px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-
-    .card-title {
-        font-size: 14px;
-        color: #68736c;
-        margin-bottom: 10px;
-    }
-
-    .card-value {
-        font-size: 30px;
-        font-weight: bold;
-        color: #1b5e20;
-    }
-
-    .card-subtitle {
-        margin-top: 8px;
-        font-size: 13px;
-        color: #7b847e;
-    }
-
-
-    /* ========================================================
-       REPORT BOXES
-    ======================================================== */
 
     .report-grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 15px;
+        grid-template-columns: repeat(3, 1fr);
     }
-
-    .report-box {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .report-box h3 {
-        margin: 0 0 10px;
-        color: #6b756e;
-        font-size: 14px;
-    }
-
-    .report-box p {
-        margin: 0;
-        font-size: 27px;
-        font-weight: bold;
-        color: #1b5e20;
-    }
-
-
-    /* ========================================================
-       ANALYTICS
-    ======================================================== */
 
     .analytics-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        grid-template-columns: 1fr;
     }
 
-    .chart-card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-
-    .chart-card h3 {
-        margin: 0 0 5px;
-        color: #1b5e20;
-        font-size: 18px;
-    }
-
-    .chart-card p {
-        margin: 0 0 18px;
-        color: #7a837d;
-        font-size: 13px;
-    }
-
-    .chart-container {
-        position: relative;
-        height: 320px;
+    .performance-grid {
+        grid-template-columns: 1fr;
     }
 
     .full-chart {
-        grid-column: 1 / -1;
+        grid-column: auto;
     }
 
-    .full-chart .chart-container {
-        height: 380px;
+    .report-header-top {
+        flex-direction: column;
     }
 
-
-    /* ========================================================
-       PERFORMANCE
-    ======================================================== */
-
-    .performance-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+    .export-form {
+        align-items: flex-start;
     }
 
-    .performance-card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        overflow-x: auto;
+}
+
+
+/* =========================================================
+   RESPONSIVE — SMALL TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .report-header h1 {
+        font-size: 27px;
     }
 
-    .performance-card h3 {
-        margin: 0 0 5px;
-        color: #1b5e20;
+    .report-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .export-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .export-field {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .export-buttons {
+        width: 100%;
+    }
+
+    .export-button {
+        flex: 1;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .report-header {
+        margin-bottom: 22px;
+    }
+
+    .report-header h1 {
+        font-size: 24px;
+    }
+
+    .report-header p {
+        font-size: 13px;
+    }
+
+    .export-panel {
+        padding: 18px;
+        border-radius: 11px;
+    }
+
+    .export-title {
         font-size: 18px;
     }
 
-    .performance-card p {
-        margin: 0 0 18px;
-        color: #7a837d;
-        font-size: 13px;
+    .export-buttons {
+        display: grid;
+        grid-template-columns: 1fr;
     }
 
-    .rank {
-        font-weight: bold;
-        color: #1b5e20;
-        width: 45px;
-    }
-
-    .performance-animal {
-        color: #2f7548;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .performance-animal:hover {
-        text-decoration: underline;
-    }
-
-    .performance-value {
-        font-weight: bold;
-        color: #1b5e20;
-        white-space: nowrap;
-    }
-
-    .species-badge {
-        display: inline-block;
-        padding: 4px 8px;
-        border-radius: 15px;
-        background: #edf5ef;
-        color: #2f7548;
-        font-size: 11px;
-        font-weight: bold;
-        white-space: nowrap;
-    }
-
-
-    /* ========================================================
-       PROFITABILITY
-    ======================================================== */
-
-    .profit-positive {
-        color: #1b5e20;
-        font-weight: bold;
-        white-space: nowrap;
-    }
-
-    .profit-negative {
-        color: #b3261e;
-        font-weight: bold;
-        white-space: nowrap;
-    }
-
-
-    /* ========================================================
-       TABLES
-    ======================================================== */
-
-    .table-card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 25px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        overflow-x: auto;
-    }
-
-    table {
+    .export-button {
         width: 100%;
-        border-collapse: collapse;
+        flex: none;
     }
 
-    th {
-        background: #f0f4f1;
-        color: #445048;
-        text-align: left;
-        padding: 13px;
-        font-size: 13px;
+    .section-title {
+        font-size: 19px;
     }
 
-    td {
-        padding: 13px;
-        border-bottom: 1px solid #edf0ed;
-        font-size: 14px;
+    .card-grid {
+        grid-template-columns: 1fr;
+        gap: 13px;
     }
 
-    tr:last-child td {
-        border-bottom: none;
+    .report-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
     }
 
-    .animal-link {
-        color: #2f7548;
-        text-decoration: none;
-        font-weight: bold;
+    .report-box {
+        padding: 17px 10px;
     }
 
-    .animal-link:hover {
-        text-decoration: underline;
+    .report-box p {
+        font-size: 23px;
     }
 
-    .status {
-        display: inline-block;
-        padding: 5px 9px;
-        border-radius: 20px;
-        background: #edf5ef;
-        color: #2f7548;
-        font-size: 12px;
-        font-weight: bold;
+    .chart-card {
+        padding: 17px;
     }
 
-    .empty {
-        text-align: center;
-        color: #888;
-        padding: 25px;
+    .chart-container {
+        height: 270px;
     }
 
-
-    /* ========================================================
-       RESPONSIVE
-    ======================================================== */
-
-    @media (max-width: 1100px) {
-
-        .card-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .report-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .analytics-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .performance-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .full-chart {
-            grid-column: auto;
-        }
-
-        .report-header-top {
-            flex-direction: column;
-        }
-
+    .full-chart .chart-container {
+        height: 300px;
     }
 
-
-    @media (max-width: 800px) {
-
-        .report-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .export-form {
-            align-items: stretch;
-        }
-
-        .export-field {
-            width: 100%;
-            min-width: 0;
-        }
-
+    .performance-card,
+    .table-card {
+        padding: 15px;
     }
 
-
-    @media (max-width: 600px) {
-
-        .card-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .report-grid {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .chart-container {
-            height: 280px;
-        }
-
-        .full-chart .chart-container {
-            height: 300px;
-        }
-
-        .export-buttons {
-            width: 100%;
-        }
-
-        .export-button {
-            flex: 1;
-        }
-
+    .performance-card h3 {
+        font-size: 16px;
     }
+
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .report-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-box {
+        padding: 18px;
+    }
+
+    .report-box p {
+        font-size: 25px;
+    }
+
+    .card-value {
+        font-size: 27px;
+    }
+
+}
 
 </style>
 
@@ -1012,6 +1193,7 @@
 
     <div class="performance-grid">
 
+
         <!-- TOP MILK PRODUCERS -->
 
         <div class="performance-card">
@@ -1241,6 +1423,7 @@
 
     <div class="performance-grid">
 
+
         <!-- MOST PROFITABLE -->
 
         <div class="performance-card">
@@ -1434,7 +1617,6 @@
         <table>
 
             <thead>
-
                 <tr>
                     <th>Date</th>
                     <th>Animal</th>
@@ -1442,7 +1624,6 @@
                     <th>Quantity</th>
                     <th>Unit</th>
                 </tr>
-
             </thead>
 
             <tbody>
@@ -1514,7 +1695,6 @@
         <table>
 
             <thead>
-
                 <tr>
                     <th>Date</th>
                     <th>Animal</th>
@@ -1523,7 +1703,6 @@
                     <th>Medication</th>
                     <th>Veterinarian</th>
                 </tr>
-
             </thead>
 
             <tbody>
@@ -1599,7 +1778,6 @@
         <table>
 
             <thead>
-
                 <tr>
                     <th>Breeding Date</th>
                     <th>Female</th>
@@ -1608,7 +1786,6 @@
                     <th>Expected Birth</th>
                     <th>Offspring</th>
                 </tr>
-
             </thead>
 
             <tbody>
@@ -1712,392 +1889,324 @@
 
 <script>
 
-    /* ==========================
-       LOAD DJANGO DATA
-    ========================== */
+/* =========================================================
+   LOAD DJANGO DATA
+========================================================= */
 
-    const speciesLabels =
-        JSON.parse(
-            document.getElementById('species-labels').textContent
-        );
+const speciesLabels =
+    JSON.parse(
+        document.getElementById('species-labels').textContent
+    );
 
-    const speciesValues =
-        JSON.parse(
-            document.getElementById('species-values').textContent
-        );
-
-
-    const healthLabels =
-        JSON.parse(
-            document.getElementById('health-labels').textContent
-        );
-
-    const healthValues =
-        JSON.parse(
-            document.getElementById('health-values').textContent
-        );
-
-
-    const breedingLabels =
-        JSON.parse(
-            document.getElementById('breeding-labels').textContent
-        );
-
-    const breedingValues =
-        JSON.parse(
-            document.getElementById('breeding-values').textContent
-        );
-
-
-    const monthlyLabels =
-        JSON.parse(
-            document.getElementById('monthly-labels').textContent
-        );
-
-    const monthlyMilk =
-        JSON.parse(
-            document.getElementById('monthly-milk').textContent
-        );
-
-    const monthlyMeat =
-        JSON.parse(
-            document.getElementById('monthly-meat').textContent
-        );
-
-    const monthlyWeight =
-        JSON.parse(
-            document.getElementById('monthly-weight').textContent
-        );
-
-
-    const monthlyIncome =
-        JSON.parse(
-            document.getElementById('monthly-income').textContent
-        );
-
-    const monthlyExpenses =
-        JSON.parse(
-            document.getElementById('monthly-expenses').textContent
-        );
-
-
-    /* ==========================
-       DEFAULT CHART SETTINGS
-    ========================== */
-
-    Chart.defaults.font.family =
-        "Arial, sans-serif";
-
-    Chart.defaults.plugins.legend.position =
-        "bottom";
-
-
-    /* ==========================
-       HERD COMPOSITION
-    ========================== */
-
-    new Chart(
-        document.getElementById('speciesChart'),
-        {
-            type: 'doughnut',
-
-            data: {
-                labels: speciesLabels,
-
-                datasets: [
-                    {
-                        data: speciesValues,
-                        borderWidth: 2
-                    }
-                ]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    legend: {
-                        position: 'bottom'
-                    }
-
-                }
-            }
-        }
+const speciesValues =
+    JSON.parse(
+        document.getElementById('species-values').textContent
     );
 
 
-    /* ==========================
-       HEALTH RECORDS
-    ========================== */
+const healthLabels =
+    JSON.parse(
+        document.getElementById('health-labels').textContent
+    );
 
-    new Chart(
-        document.getElementById('healthChart'),
-        {
-            type: 'bar',
-
-            data: {
-
-                labels: healthLabels,
-
-                datasets: [
-                    {
-                        label: 'Records',
-
-                        data: healthValues,
-
-                        borderWidth: 1
-                    }
-                ]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                scales: {
-
-                    y: {
-
-                        beginAtZero: true,
-
-                        ticks: {
-                            precision: 0
-                        }
-
-                    }
-
-                },
-
-                plugins: {
-
-                    legend: {
-                        display: false
-                    }
-
-                }
-            }
-        }
+const healthValues =
+    JSON.parse(
+        document.getElementById('health-values').textContent
     );
 
 
-    /* ==========================
-       BREEDING STATUS
-    ========================== */
+const breedingLabels =
+    JSON.parse(
+        document.getElementById('breeding-labels').textContent
+    );
 
-    new Chart(
-        document.getElementById('breedingChart'),
-        {
-            type: 'bar',
-
-            data: {
-
-                labels: breedingLabels,
-
-                datasets: [
-                    {
-                        label: 'Breeding Records',
-
-                        data: breedingValues,
-
-                        borderWidth: 1
-                    }
-                ]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                scales: {
-
-                    y: {
-
-                        beginAtZero: true,
-
-                        ticks: {
-                            precision: 0
-                        }
-
-                    }
-
-                },
-
-                plugins: {
-
-                    legend: {
-                        display: false
-                    }
-
-                }
-            }
-        }
+const breedingValues =
+    JSON.parse(
+        document.getElementById('breeding-values').textContent
     );
 
 
-    /* ==========================
-       PRODUCTION TREND
-    ========================== */
+const monthlyLabels =
+    JSON.parse(
+        document.getElementById('monthly-labels').textContent
+    );
 
-    new Chart(
-        document.getElementById('productionChart'),
-        {
-            type: 'line',
+const monthlyMilk =
+    JSON.parse(
+        document.getElementById('monthly-milk').textContent
+    );
 
-            data: {
+const monthlyMeat =
+    JSON.parse(
+        document.getElementById('monthly-meat').textContent
+    );
 
-                labels: monthlyLabels,
-
-                datasets: [
-
-                    {
-                        label: 'Milk',
-
-                        data: monthlyMilk,
-
-                        borderWidth: 3,
-
-                        tension: 0.3,
-
-                        fill: false
-                    },
-
-                    {
-                        label: 'Meat',
-
-                        data: monthlyMeat,
-
-                        borderWidth: 3,
-
-                        tension: 0.3,
-
-                        fill: false
-                    },
-
-                    {
-                        label: 'Weight',
-
-                        data: monthlyWeight,
-
-                        borderWidth: 3,
-
-                        tension: 0.3,
-
-                        fill: false
-                    }
-
-                ]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                interaction: {
-
-                    intersect: false,
-
-                    mode: 'index'
-
-                },
-
-                scales: {
-
-                    y: {
-
-                        beginAtZero: true
-
-                    }
-
-                }
-
-            }
-        }
+const monthlyWeight =
+    JSON.parse(
+        document.getElementById('monthly-weight').textContent
     );
 
 
-    /* ==========================
-       FINANCIAL PERFORMANCE
-    ========================== */
+const monthlyIncome =
+    JSON.parse(
+        document.getElementById('monthly-income').textContent
+    );
 
-    new Chart(
-        document.getElementById('financeChart'),
-        {
-            type: 'bar',
+const monthlyExpenses =
+    JSON.parse(
+        document.getElementById('monthly-expenses').textContent
+    );
 
-            data: {
 
-                labels: monthlyLabels,
+/* =========================================================
+   DEFAULT CHART SETTINGS
+========================================================= */
 
-                datasets: [
+Chart.defaults.font.family = "Arial, sans-serif";
+Chart.defaults.plugins.legend.position = "bottom";
 
-                    {
-                        label: 'Income',
 
-                        data: monthlyIncome,
+/* =========================================================
+   HERD COMPOSITION
+========================================================= */
 
-                        borderWidth: 1
-                    },
+new Chart(
+    document.getElementById('speciesChart'),
+    {
+        type: 'doughnut',
 
-                    {
-                        label: 'Expenses',
+        data: {
+            labels: speciesLabels,
 
-                        data: monthlyExpenses,
+            datasets: [
+                {
+                    data: speciesValues,
+                    borderWidth: 2
+                }
+            ]
+        },
 
-                        borderWidth: 1
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    }
+);
+
+
+/* =========================================================
+   HEALTH RECORDS
+========================================================= */
+
+new Chart(
+    document.getElementById('healthChart'),
+    {
+        type: 'bar',
+
+        data: {
+            labels: healthLabels,
+
+            datasets: [
+                {
+                    label: 'Records',
+                    data: healthValues,
+                    borderWidth: 1
+                }
+            ]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0
                     }
-
-                ]
+                }
             },
 
-            options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    }
+);
 
-                responsive: true,
 
-                maintainAspectRatio: false,
+/* =========================================================
+   BREEDING STATUS
+========================================================= */
 
-                interaction: {
+new Chart(
+    document.getElementById('breedingChart'),
+    {
+        type: 'bar',
 
-                    intersect: false,
+        data: {
+            labels: breedingLabels,
 
-                    mode: 'index'
+            datasets: [
+                {
+                    label: 'Breeding Records',
+                    data: breedingValues,
+                    borderWidth: 1
+                }
+            ]
+        },
 
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            },
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    }
+);
+
+
+/* =========================================================
+   PRODUCTION TREND
+========================================================= */
+
+new Chart(
+    document.getElementById('productionChart'),
+    {
+        type: 'line',
+
+        data: {
+            labels: monthlyLabels,
+
+            datasets: [
+
+                {
+                    label: 'Milk',
+                    data: monthlyMilk,
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: false
                 },
 
-                scales: {
+                {
+                    label: 'Meat',
+                    data: monthlyMeat,
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: false
+                },
 
-                    y: {
+                {
+                    label: 'Weight',
+                    data: monthlyWeight,
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: false
+                }
 
-                        beginAtZero: true,
+            ]
+        },
 
-                        ticks: {
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
 
-                            callback: function(value) {
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
 
-                                return 'KSh ' +
-                                    Number(value).toLocaleString();
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    }
+);
 
-                            }
+
+/* =========================================================
+   FINANCIAL PERFORMANCE
+========================================================= */
+
+new Chart(
+    document.getElementById('financeChart'),
+    {
+        type: 'bar',
+
+        data: {
+            labels: monthlyLabels,
+
+            datasets: [
+
+                {
+                    label: 'Income',
+                    data: monthlyIncome,
+                    borderWidth: 1
+                },
+
+                {
+                    label: 'Expenses',
+                    data: monthlyExpenses,
+                    borderWidth: 1
+                }
+
+            ]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        callback: function(value) {
+
+                            return 'KSh ' +
+                                Number(value).toLocaleString();
 
                         }
-
                     }
-
                 }
-
             }
         }
-    );
+    }
+);
 
 </script>
 
 {% endblock %}
+```

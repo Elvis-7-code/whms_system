@@ -1,27 +1,25 @@
+```django
 {% extends 'livestock/base.html' %}
 
 {% block title %}Finance Dashboard - WAHOME HERD{% endblock %}
 
 {% block extra_css %}
-
 <style>
-
     :root {
-        --green: #166534;
-        --green-light: #dcfce7;
-        --red: #dc2626;
-        --red-light: #fee2e2;
-        --blue: #2563eb;
-        --blue-light: #dbeafe;
-        --orange: #d97706;
-        --orange-light: #fef3c7;
-        --purple: #7c3aed;
-        --purple-light: #ede9fe;
-        --dark: #1f2937;
-        --muted: #6b7280;
-        --border: #e5e7eb;
-        --background: #f8fafc;
-        --white: #ffffff;
+        --finance-green: #166534;
+        --finance-green-light: #dcfce7;
+        --finance-red: #dc2626;
+        --finance-red-light: #fee2e2;
+        --finance-blue: #2563eb;
+        --finance-blue-light: #dbeafe;
+        --finance-purple: #7c3aed;
+        --finance-purple-light: #ede9fe;
+        --finance-orange: #d97706;
+        --finance-dark: #1f2937;
+        --finance-muted: #6b7280;
+        --finance-border: #e5e7eb;
+        --finance-background: #f8fafc;
+        --finance-white: #ffffff;
     }
 
     .finance-page {
@@ -29,118 +27,142 @@
     }
 
     /* =========================
-       HEADER
+       PAGE HEADER
     ========================= */
 
     .finance-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         gap: 20px;
-        margin-bottom: 25px;
+        margin-bottom: 28px;
     }
 
     .finance-header h1 {
         margin: 0;
-        color: var(--dark);
+        color: var(--finance-dark);
         font-size: 30px;
+        font-weight: 700;
+        line-height: 1.2;
     }
 
     .finance-header p {
-        margin: 7px 0 0;
-        color: var(--muted);
+        margin: 8px 0 0;
+        color: var(--finance-muted);
         font-size: 15px;
+        line-height: 1.6;
+        max-width: 720px;
     }
 
     .add-button {
-        background: var(--green);
-        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--finance-green);
+        color: #fff;
         text-decoration: none;
         padding: 11px 18px;
         border-radius: 9px;
         font-weight: 700;
-        transition: 0.2s;
+        font-size: 14px;
         white-space: nowrap;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(22, 101, 52, 0.15);
     }
 
     .add-button:hover {
         background: #14532d;
         transform: translateY(-1px);
+        box-shadow: 0 5px 12px rgba(22, 101, 52, 0.2);
     }
 
     /* =========================
-       SUMMARY CARDS
+       MAIN SUMMARY CARDS
     ========================= */
 
     .finance-cards {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 18px;
-        margin-bottom: 25px;
+        margin-bottom: 22px;
     }
 
     .finance-card {
-        background: var(--white);
+        position: relative;
+        background: var(--finance-white);
+        border: 1px solid var(--finance-border);
         border-radius: 14px;
         padding: 20px;
-        border: 1px solid var(--border);
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        min-height: 145px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.045);
         border-top: 4px solid;
-        transition: 0.2s;
+        transition: all 0.2s ease;
     }
 
     .finance-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 7px 18px rgba(0, 0, 0, 0.08);
     }
 
     .finance-card h3 {
-        margin: 0 0 9px;
-        font-size: 14px;
-        color: var(--muted);
+        margin: 0 0 10px;
+        color: var(--finance-muted);
+        font-size: 13px;
+        font-weight: 700;
     }
 
     .finance-card .amount {
         font-size: 25px;
         font-weight: 700;
+        line-height: 1.25;
+        word-break: break-word;
     }
 
     .finance-card .description {
-        margin-top: 7px;
+        margin-top: 8px;
+        color: var(--finance-muted);
         font-size: 12px;
-        color: var(--muted);
+        line-height: 1.4;
     }
 
     .income {
-        border-top-color: var(--green);
+        border-top-color: var(--finance-green);
     }
 
     .income .amount {
-        color: var(--green);
+        color: var(--finance-green);
     }
 
     .expense {
-        border-top-color: var(--red);
+        border-top-color: var(--finance-red);
     }
 
     .expense .amount {
-        color: var(--red);
+        color: var(--finance-red);
     }
 
     .profit {
-        border-top-color: var(--blue);
+        border-top-color: var(--finance-blue);
     }
 
     .profit .amount {
-        color: var(--blue);
+        color: var(--finance-blue);
     }
 
     .margin {
-        border-top-color: var(--purple);
+        border-top-color: var(--finance-purple);
     }
 
     .margin .amount {
-        color: var(--purple);
+        color: var(--finance-purple);
+    }
+
+    .profit-positive {
+        color: var(--finance-green) !important;
+    }
+
+    .profit-negative {
+        color: var(--finance-red) !important;
     }
 
     /* =========================
@@ -155,28 +177,31 @@
     }
 
     .secondary-card {
-        background: white;
-        border: 1px solid var(--border);
+        background: var(--finance-white);
+        border: 1px solid var(--finance-border);
         border-radius: 12px;
         padding: 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.035);
     }
 
     .secondary-label {
-        color: var(--muted);
+        color: var(--finance-muted);
         font-size: 13px;
-        margin-bottom: 6px;
+        font-weight: 600;
+        margin-bottom: 7px;
     }
 
     .secondary-value {
-        color: var(--dark);
-        font-size: 21px;
+        color: var(--finance-dark);
+        font-size: 22px;
         font-weight: 700;
+        line-height: 1.2;
     }
 
     .secondary-description {
-        color: var(--muted);
+        color: var(--finance-muted);
         font-size: 12px;
-        margin-top: 5px;
+        margin-top: 6px;
     }
 
     /* =========================
@@ -185,17 +210,18 @@
 
     .charts-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 25px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
         margin-bottom: 25px;
     }
 
     .chart-card {
-        background: white;
+        background: var(--finance-white);
+        border: 1px solid var(--finance-border);
         border-radius: 14px;
         padding: 22px;
-        border: 1px solid var(--border);
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.045);
+        min-width: 0;
     }
 
     .chart-card.full-width {
@@ -203,15 +229,17 @@
     }
 
     .chart-card h2 {
-        margin: 0 0 5px;
+        margin: 0;
+        color: var(--finance-dark);
         font-size: 19px;
-        color: var(--dark);
+        font-weight: 700;
     }
 
     .chart-description {
-        margin: 0 0 18px;
-        color: var(--muted);
+        margin: 6px 0 18px;
+        color: var(--finance-muted);
         font-size: 13px;
+        line-height: 1.5;
     }
 
     .chart-container {
@@ -220,44 +248,56 @@
     }
 
     /* =========================
-       CATEGORY SECTION
+       CATEGORY BREAKDOWN
     ========================= */
 
-    .category-section {
-        background: white;
+    .category-section,
+    .animal-finance-section,
+    .transactions-section {
+        background: var(--finance-white);
+        border: 1px solid var(--finance-border);
         border-radius: 14px;
         padding: 22px;
         margin-bottom: 25px;
-        border: 1px solid var(--border);
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.045);
     }
 
-    .category-section h2 {
-        margin: 0 0 5px;
-        color: var(--dark);
+    .category-section h2,
+    .animal-finance-section h2 {
+        margin: 0;
+        color: var(--finance-dark);
+        font-size: 20px;
+        font-weight: 700;
     }
 
-    .category-description {
-        margin: 0 0 20px;
-        color: var(--muted);
+    .category-description,
+    .animal-finance-description {
+        margin: 6px 0 20px;
+        color: var(--finance-muted);
         font-size: 13px;
+        line-height: 1.5;
     }
 
     .category-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 25px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
     }
 
-    .category-box {
-        border: 1px solid var(--border);
+    .category-box,
+    .animal-finance-box {
+        border: 1px solid var(--finance-border);
         border-radius: 11px;
         padding: 18px;
+        min-width: 0;
     }
 
-    .category-box h3 {
+    .category-box h3,
+    .animal-finance-box h3 {
         margin: 0 0 12px;
         color: #374151;
+        font-size: 16px;
+        font-weight: 700;
     }
 
     .category-row {
@@ -275,55 +315,24 @@
 
     .category-name {
         color: #4b5563;
+        font-size: 14px;
     }
 
     .category-amount {
-        font-weight: 700;
         color: #111827;
+        font-size: 14px;
+        font-weight: 700;
         white-space: nowrap;
     }
 
     /* =========================
-       ANIMAL FINANCE
+       ANIMAL FINANCIAL PERFORMANCE
     ========================= */
-
-    .animal-finance-section {
-        background: white;
-        border-radius: 14px;
-        padding: 22px;
-        margin-bottom: 25px;
-        border: 1px solid var(--border);
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    .animal-finance-section h2 {
-        margin: 0;
-        color: var(--dark);
-        font-size: 20px;
-    }
-
-    .animal-finance-description {
-        color: var(--muted);
-        font-size: 13px;
-        margin: 6px 0 20px;
-    }
 
     .animal-finance-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 25px;
-    }
-
-    .animal-finance-box {
-        border: 1px solid var(--border);
-        border-radius: 11px;
-        padding: 18px;
-    }
-
-    .animal-finance-box h3 {
-        margin: 0 0 15px;
-        color: #374151;
-        font-size: 16px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
     }
 
     .animal-row {
@@ -343,10 +352,11 @@
         display: flex;
         flex-direction: column;
         gap: 3px;
+        min-width: 0;
     }
 
     .animal-id {
-        color: var(--green);
+        color: var(--finance-green);
         font-weight: 700;
         text-decoration: none;
     }
@@ -356,27 +366,21 @@
     }
 
     .animal-species {
-        color: var(--muted);
+        color: var(--finance-muted);
         font-size: 12px;
     }
 
     .animal-profit {
         font-weight: 700;
         white-space: nowrap;
-    }
-
-    .profit-positive {
-        color: var(--green);
-    }
-
-    .profit-negative {
-        color: var(--red);
+        text-align: right;
     }
 
     .animal-details {
+        margin-top: 3px;
         text-align: right;
+        color: var(--finance-muted);
         font-size: 12px;
-        color: var(--muted);
         line-height: 1.6;
     }
 
@@ -384,34 +388,27 @@
        RECENT TRANSACTIONS
     ========================= */
 
-    .transactions-section {
-        background: white;
-        border-radius: 14px;
-        padding: 22px;
-        border: 1px solid var(--border);
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 25px;
-    }
-
     .transactions-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 18px;
         gap: 15px;
+        margin-bottom: 18px;
     }
 
     .transactions-header h2 {
         margin: 0;
-        color: var(--dark);
+        color: var(--finance-dark);
         font-size: 20px;
+        font-weight: 700;
     }
 
     .view-link {
-        color: var(--green);
+        color: var(--finance-green);
         text-decoration: none;
         font-size: 14px;
         font-weight: 700;
+        white-space: nowrap;
     }
 
     .view-link:hover {
@@ -419,7 +416,10 @@
     }
 
     .table-wrapper {
+        width: 100%;
         overflow-x: auto;
+        border: 1px solid var(--finance-border);
+        border-radius: 10px;
     }
 
     table {
@@ -432,19 +432,25 @@
     td {
         padding: 13px 12px;
         text-align: left;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid var(--finance-border);
     }
 
     th {
         background: #f8fafc;
         color: #374151;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
+        white-space: nowrap;
     }
 
     td {
         color: #4b5563;
         font-size: 14px;
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        transition: background 0.15s ease;
     }
 
     tbody tr:hover {
@@ -456,37 +462,47 @@
     }
 
     .income-text {
-        color: var(--green);
+        color: var(--finance-green);
         font-weight: 700;
+        white-space: nowrap;
     }
 
     .expense-text {
-        color: var(--red);
+        color: var(--finance-red);
         font-weight: 700;
+        white-space: nowrap;
     }
 
     .type-badge {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 5px 9px;
         border-radius: 20px;
         font-size: 11px;
         font-weight: 700;
+        white-space: nowrap;
     }
 
     .type-income {
-        background: var(--green-light);
-        color: var(--green);
+        background: var(--finance-green-light);
+        color: var(--finance-green);
     }
 
     .type-expense {
-        background: var(--red-light);
-        color: var(--red);
+        background: var(--finance-red-light);
+        color: var(--finance-red);
     }
+
+    /* =========================
+       EMPTY STATES
+    ========================= */
 
     .empty-message {
         text-align: center;
-        padding: 30px;
-        color: var(--muted);
+        padding: 28px 20px;
+        color: var(--finance-muted);
+        font-size: 13px;
     }
 
     /* =========================
@@ -494,7 +510,6 @@
     ========================= */
 
     @media (max-width: 1100px) {
-
         .finance-cards {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -509,29 +524,39 @@
     }
 
     @media (max-width: 850px) {
-
-        .animal-finance-grid,
+        .secondary-stats,
         .category-grid,
-        .secondary-stats {
+        .animal-finance-grid {
             grid-template-columns: 1fr;
         }
     }
 
     @media (max-width: 650px) {
-
         .finance-header {
             flex-direction: column;
-            align-items: flex-start;
+            align-items: stretch;
+            margin-bottom: 22px;
+        }
+
+        .finance-header h1 {
+            font-size: 25px;
+        }
+
+        .finance-header p {
+            font-size: 14px;
         }
 
         .add-button {
             width: 100%;
-            box-sizing: border-box;
-            text-align: center;
         }
 
         .finance-cards {
             grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .secondary-stats {
+            gap: 14px;
         }
 
         .chart-container {
@@ -553,56 +578,43 @@
         .animal-row {
             align-items: flex-start;
         }
+
+        .animal-profit {
+            font-size: 13px;
+        }
     }
-
 </style>
-
 {% endblock %}
 
 
 {% block content %}
-
 <div class="finance-page">
 
     <!-- =========================
-         HEADER
+         PAGE HEADER
     ========================= -->
-
     <div class="finance-header">
-
         <div>
-
-            <h1>
-                💰 Finance Dashboard
-            </h1>
-
+            <h1>💰 Finance Dashboard</h1>
             <p>
-                Track income, expenses, profitability and the financial performance of your farm.
+                Track income, expenses, profitability and the financial
+                performance of your farm.
             </p>
-
         </div>
 
-        <a href="{% url 'add_financial_record' %}"
-           class="add-button">
-
+        <a href="{% url 'add_financial_record' %}" class="add-button">
             + Add Transaction
-
         </a>
-
     </div>
 
 
     <!-- =========================
          FINANCE SUMMARY
     ========================= -->
-
     <div class="finance-cards">
 
         <div class="finance-card income">
-
-            <h3>
-                💵 Total Income
-            </h3>
+            <h3>💵 Total Income</h3>
 
             <div class="amount">
                 KSh {{ total_income|floatformat:2 }}
@@ -611,15 +623,11 @@
             <div class="description">
                 All recorded farm income
             </div>
-
         </div>
 
 
         <div class="finance-card expense">
-
-            <h3>
-                💸 Total Expenses
-            </h3>
+            <h3>💸 Total Expenses</h3>
 
             <div class="amount">
                 KSh {{ total_expenses|floatformat:2 }}
@@ -628,15 +636,11 @@
             <div class="description">
                 All recorded farm expenses
             </div>
-
         </div>
 
 
         <div class="finance-card profit">
-
-            <h3>
-                📈 Net Profit / Loss
-            </h3>
+            <h3>📈 Net Profit / Loss</h3>
 
             <div class="amount
                 {% if net_profit < 0 %}
@@ -651,15 +655,11 @@
             <div class="description">
                 Income minus expenses
             </div>
-
         </div>
 
 
         <div class="finance-card margin">
-
-            <h3>
-                📊 Profit Margin
-            </h3>
+            <h3>📊 Profit Margin</h3>
 
             <div class="amount">
                 {{ profit_margin|floatformat:1 }}%
@@ -668,7 +668,6 @@
             <div class="description">
                 Profit relative to income
             </div>
-
         </div>
 
     </div>
@@ -677,11 +676,9 @@
     <!-- =========================
          SECONDARY STATS
     ========================= -->
-
     <div class="secondary-stats">
 
         <div class="secondary-card">
-
             <div class="secondary-label">
                 Income Transactions
             </div>
@@ -693,12 +690,10 @@
             <div class="secondary-description">
                 Recorded income entries
             </div>
-
         </div>
 
 
         <div class="secondary-card">
-
             <div class="secondary-label">
                 Expense Transactions
             </div>
@@ -710,12 +705,10 @@
             <div class="secondary-description">
                 Recorded expense entries
             </div>
-
         </div>
 
 
         <div class="secondary-card">
-
             <div class="secondary-label">
                 Total Transactions
             </div>
@@ -727,90 +720,63 @@
             <div class="secondary-description">
                 Income + expense records
             </div>
-
         </div>
 
     </div>
 
 
     <!-- =========================
-         MONTHLY FINANCIAL CHART
+         FINANCIAL CHARTS
     ========================= -->
-
     <div class="charts-grid">
 
         <div class="chart-card full-width">
-
-            <h2>
-                📈 Monthly Financial Performance
-            </h2>
+            <h2>📈 Monthly Financial Performance</h2>
 
             <p class="chart-description">
                 Income, expenses and profit over the last 12 months.
             </p>
 
             <div class="chart-container">
-
                 <canvas id="monthlyFinanceChart"></canvas>
-
             </div>
-
         </div>
 
 
-        <!-- INCOME VS EXPENSES -->
-
         <div class="chart-card">
-
-            <h2>
-                💰 Income vs Expenses
-            </h2>
+            <h2>💰 Income vs Expenses</h2>
 
             <p class="chart-description">
                 Overall comparison of farm income and spending.
             </p>
 
             <div class="chart-container">
-
                 <canvas id="incomeExpenseChart"></canvas>
-
             </div>
-
         </div>
 
 
-        <!-- EXPENSE BREAKDOWN -->
-
         <div class="chart-card">
-
-            <h2>
-                💸 Expense Breakdown
-            </h2>
+            <h2>💸 Expense Breakdown</h2>
 
             <p class="chart-description">
                 Distribution of your recorded expenses.
             </p>
 
             <div class="chart-container">
-
                 <canvas id="expenseChart"></canvas>
-
             </div>
-
         </div>
 
     </div>
 
 
     <!-- =========================
-         CATEGORY BREAKDOWN
+         FINANCIAL CATEGORIES
     ========================= -->
-
     <div class="category-section">
 
-        <h2>
-            📊 Financial Categories
-        </h2>
+        <h2>📊 Financial Categories</h2>
 
         <p class="category-description">
             See how your income and expenses are distributed across categories.
@@ -819,12 +785,9 @@
         <div class="category-grid">
 
             <!-- EXPENSES -->
-
             <div class="category-box">
 
-                <h3>
-                    💸 Expenses
-                </h3>
+                <h3>💸 Expenses</h3>
 
                 {% if expense_categories %}
 
@@ -856,12 +819,9 @@
 
 
             <!-- INCOME -->
-
             <div class="category-box">
 
-                <h3>
-                    💵 Income
-                </h3>
+                <h3>💵 Income</h3>
 
                 {% if income_categories %}
 
@@ -899,27 +859,21 @@
     <!-- =========================
          ANIMAL FINANCIAL PERFORMANCE
     ========================= -->
-
     <div class="animal-finance-section">
 
-        <h2>
-            🐄 Animal Financial Performance
-        </h2>
+        <h2>🐄 Animal Financial Performance</h2>
 
         <p class="animal-finance-description">
-            Financial performance is calculated only from transactions linked to individual animals.
+            Financial performance is calculated only from transactions linked
+            to individual animals.
         </p>
-
 
         <div class="animal-finance-grid">
 
             <!-- MOST PROFITABLE -->
-
             <div class="animal-finance-box">
 
-                <h3>
-                    🏆 Most Profitable Animals
-                </h3>
+                <h3>🏆 Most Profitable Animals</h3>
 
                 {% if top_profitable_animals %}
 
@@ -929,11 +883,11 @@
 
                             <div class="animal-info">
 
-                                <a href="{% url 'animal_detail' item.animal.animal_id %}"
-                                   class="animal-id">
-
+                                <a
+                                    href="{% url 'animal_detail' item.animal.animal_id %}"
+                                    class="animal-id"
+                                >
                                     {{ item.animal.animal_id }}
-
                                 </a>
 
                                 <span class="animal-species">
@@ -952,21 +906,15 @@
                                         profit-negative
                                     {% endif %}
                                 ">
-
                                     KSh {{ item.profit|floatformat:2 }}
-
                                 </div>
 
                                 <div class="animal-details">
-
                                     Income:
                                     KSh {{ item.income|floatformat:2 }}
-
                                     <br>
-
                                     Expenses:
                                     KSh {{ item.expenses|floatformat:2 }}
-
                                 </div>
 
                             </div>
@@ -987,12 +935,9 @@
 
 
             <!-- HIGHEST EXPENSES -->
-
             <div class="animal-finance-box">
 
-                <h3>
-                    💸 Highest Animal Expenses
-                </h3>
+                <h3>💸 Highest Animal Expenses</h3>
 
                 {% if highest_expense_animals %}
 
@@ -1002,11 +947,11 @@
 
                             <div class="animal-info">
 
-                                <a href="{% url 'animal_detail' item.animal.animal_id %}"
-                                   class="animal-id">
-
+                                <a
+                                    href="{% url 'animal_detail' item.animal.animal_id %}"
+                                    class="animal-id"
+                                >
                                     {{ item.animal.animal_id }}
-
                                 </a>
 
                                 <span class="animal-species">
@@ -1019,21 +964,15 @@
                             <div>
 
                                 <div class="animal-profit profit-negative">
-
                                     KSh {{ item.expenses|floatformat:2 }}
-
                                 </div>
 
                                 <div class="animal-details">
-
                                     Income:
                                     KSh {{ item.income|floatformat:2 }}
-
                                     <br>
-
                                     Profit:
                                     KSh {{ item.profit|floatformat:2 }}
-
                                 </div>
 
                             </div>
@@ -1060,20 +999,17 @@
     <!-- =========================
          RECENT TRANSACTIONS
     ========================= -->
-
     <div class="transactions-section">
 
         <div class="transactions-header">
 
-            <h2>
-                🧾 Recent Transactions
-            </h2>
+            <h2>🧾 Recent Transactions</h2>
 
-            <a href="{% url 'financial_records' %}"
-               class="view-link">
-
+            <a
+                href="{% url 'financial_records' %}"
+                class="view-link"
+            >
                 View All Transactions →
-
             </a>
 
         </div>
@@ -1084,35 +1020,14 @@
             <table>
 
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Date
-                        </th>
-
-                        <th>
-                            Type
-                        </th>
-
-                        <th>
-                            Category
-                        </th>
-
-                        <th>
-                            Animal
-                        </th>
-
-                        <th>
-                            Amount
-                        </th>
-
-                        <th>
-                            Description
-                        </th>
-
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Animal</th>
+                        <th>Amount</th>
+                        <th>Description</th>
                     </tr>
-
                 </thead>
 
 
@@ -1155,11 +1070,11 @@
 
                                 {% if transaction.animal %}
 
-                                    <a href="{% url 'animal_detail' transaction.animal.animal_id %}"
-                                       class="animal-id">
-
+                                    <a
+                                        href="{% url 'animal_detail' transaction.animal.animal_id %}"
+                                        class="animal-id"
+                                    >
                                         {{ transaction.animal.animal_id }}
-
                                     </a>
 
                                 {% else %}
@@ -1176,17 +1091,13 @@
                                 {% if transaction.record_type == 'INCOME' %}
 
                                     <span class="income-text">
-
                                         + KSh {{ transaction.amount|floatformat:2 }}
-
                                     </span>
 
                                 {% else %}
 
                                     <span class="expense-text">
-
                                         - KSh {{ transaction.amount|floatformat:2 }}
-
                                     </span>
 
                                 {% endif %}
@@ -1204,11 +1115,8 @@
 
                         <tr>
 
-                            <td colspan="6"
-                                class="empty-message">
-
+                            <td colspan="6" class="empty-message">
                                 No financial transactions recorded yet.
-
                             </td>
 
                         </tr>
@@ -1224,7 +1132,6 @@
     </div>
 
 </div>
-
 {% endblock %}
 
 
@@ -1233,7 +1140,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-
     /* =========================
        MONTHLY FINANCIAL CHART
     ========================= */
@@ -1245,7 +1151,6 @@
         {% endfor %}
     ];
 
-
     const monthlyIncome = [
         {% for value in monthly_income %}
             {{ value }}
@@ -1253,14 +1158,12 @@
         {% endfor %}
     ];
 
-
     const monthlyExpenses = [
         {% for value in monthly_expenses %}
             {{ value }}
             {% if not forloop.last %},{% endif %}
         {% endfor %}
     ];
-
 
     const monthlyProfit = [
         {% for value in monthly_profit %}
@@ -1273,18 +1176,16 @@
     const monthlyFinanceCanvas =
         document.getElementById('monthlyFinanceChart');
 
+    if (monthlyFinanceCanvas) {
 
-    new Chart(
-        monthlyFinanceCanvas,
-        {
+        new Chart(monthlyFinanceCanvas, {
+
             type: 'line',
 
             data: {
-
                 labels: monthlyLabels,
 
                 datasets: [
-
                     {
                         label: 'Income (KSh)',
                         data: monthlyIncome,
@@ -1305,15 +1206,11 @@
                         borderWidth: 2,
                         tension: 0.3
                     }
-
                 ]
-
             },
 
             options: {
-
                 responsive: true,
-
                 maintainAspectRatio: false,
 
                 interaction: {
@@ -1322,38 +1219,28 @@
                 },
 
                 plugins: {
-
                     legend: {
                         position: 'bottom'
                     }
-
                 },
 
                 scales: {
-
                     y: {
-
                         beginAtZero: true,
 
                         ticks: {
-
                             callback: function(value) {
-
                                 return 'KSh ' +
                                     Number(value).toLocaleString();
-
                             }
-
                         }
-
                     }
-
                 }
-
             }
 
-        }
-    );
+        });
+
+    }
 
 
     /* =========================
@@ -1363,10 +1250,10 @@
     const incomeExpenseCanvas =
         document.getElementById('incomeExpenseChart');
 
+    if (incomeExpenseCanvas) {
 
-    new Chart(
-        incomeExpenseCanvas,
-        {
+        new Chart(incomeExpenseCanvas, {
+
             type: 'bar',
 
             data: {
@@ -1377,7 +1264,6 @@
                 ],
 
                 datasets: [
-
                     {
                         label: 'Amount (KSh)',
 
@@ -1388,50 +1274,36 @@
 
                         borderWidth: 1
                     }
-
                 ]
-
             },
 
             options: {
-
                 responsive: true,
-
                 maintainAspectRatio: false,
 
                 plugins: {
-
                     legend: {
                         display: false
                     }
-
                 },
 
                 scales: {
-
                     y: {
-
                         beginAtZero: true,
 
                         ticks: {
-
                             callback: function(value) {
-
                                 return 'KSh ' +
                                     Number(value).toLocaleString();
-
                             }
-
                         }
-
                     }
-
                 }
-
             }
 
-        }
-    );
+        });
+
+    }
 
 
     /* =========================
@@ -1439,78 +1311,59 @@
     ========================= */
 
     const expenseLabels = [
-
         {% for item in expense_categories %}
-
             "{{ item.name|escapejs }}"
-
             {% if not forloop.last %},{% endif %}
-
         {% endfor %}
-
     ];
 
-
     const expenseData = [
-
         {% for item in expense_categories %}
-
             {{ item.amount }}
-
             {% if not forloop.last %},{% endif %}
-
         {% endfor %}
-
     ];
 
 
     const expenseCanvas =
         document.getElementById('expenseChart');
 
+    if (expenseCanvas && expenseLabels.length > 0) {
 
-    if (expenseLabels.length > 0) {
+        new Chart(expenseCanvas, {
 
-        new Chart(
-            expenseCanvas,
-            {
-                type: 'doughnut',
+            type: 'doughnut',
 
-                data: {
+            data: {
 
-                    labels: expenseLabels,
+                labels: expenseLabels,
 
-                    datasets: [
-
-                        {
-                            data: expenseData,
-                            borderWidth: 1
-                        }
-
-                    ]
-
-                },
-
-                options: {
-
-                    responsive: true,
-
-                    maintainAspectRatio: false,
-
-                    plugins: {
-
-                        legend: {
-                            position: 'bottom'
-                        }
-
+                datasets: [
+                    {
+                        data: expenseData,
+                        borderWidth: 1
                     }
+                ]
 
+            },
+
+            options: {
+
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
                 }
 
             }
-        );
+
+        });
 
     }
-
 </script>
 
 {% endblock %}
+```

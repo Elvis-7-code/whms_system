@@ -6,14 +6,19 @@
 
 <style>
 
+    /* =========================
+       FARM SETTINGS PAGE
+    ========================= */
+
     .settings-page {
         max-width: 1100px;
         margin: 0 auto;
         padding: 10px 0 40px;
     }
 
+
     /* =========================
-       HEADER
+       PAGE HEADER
     ========================= */
 
     .settings-header {
@@ -29,72 +34,101 @@
         margin: 0;
         color: #1b5e20;
         font-size: 30px;
+        font-weight: 700;
+        line-height: 1.2;
     }
 
     .settings-header p {
-        margin: 7px 0 0;
+        margin: 8px 0 0;
         color: #6b7280;
+        font-size: 15px;
     }
 
     .settings-icon {
-        font-size: 42px;
+        width: 62px;
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f5e9;
+        border-radius: 14px;
+        font-size: 34px;
+        flex-shrink: 0;
     }
 
+
     /* =========================
-       QUICK INFO
+       QUICK INFORMATION
     ========================= */
 
     .quick-info {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
+        gap: 18px;
         margin-bottom: 25px;
     }
 
     .info-card {
-        background: white;
+        background: #ffffff;
         padding: 20px;
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        border: 1px solid #e5e7eb;
         border-left: 4px solid #2e7d32;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        min-width: 0;
+    }
+
+    .info-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
     }
 
     .info-card-label {
-        color: #777;
+        color: #6b7280;
         font-size: 13px;
-        margin-bottom: 7px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
 
     .info-card-value {
         color: #1b5e20;
         font-size: 17px;
-        font-weight: bold;
+        font-weight: 700;
+        line-height: 1.4;
         word-break: break-word;
     }
 
+
     /* =========================
-       MAIN CARD
+       SETTINGS CARD
     ========================= */
 
     .settings-card {
-        background: white;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
         border-radius: 12px;
         padding: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
     }
 
     .section-title {
         color: #1b5e20;
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 8px;
+        font-size: 21px;
+        font-weight: 700;
+        margin-bottom: 7px;
     }
 
     .section-description {
-        color: #777;
+        color: #6b7280;
         font-size: 14px;
+        line-height: 1.6;
         margin-bottom: 25px;
+        max-width: 800px;
     }
+
 
     /* =========================
        FORM
@@ -102,13 +136,14 @@
 
     .form-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 20px;
     }
 
     .form-group {
         display: flex;
         flex-direction: column;
+        min-width: 0;
     }
 
     .form-group.full-width {
@@ -116,15 +151,21 @@
     }
 
     .form-group label {
-        font-weight: 600;
         color: #374151;
-        margin-bottom: 8px;
         font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
     }
 
     .required {
         color: #d32f2f;
+        margin-left: 2px;
     }
+
+
+    /* =========================
+       INPUTS
+    ========================= */
 
     .form-group input,
     .form-group textarea {
@@ -132,16 +173,30 @@
         padding: 13px 14px;
         border: 1px solid #d1d5db;
         border-radius: 8px;
-        font-size: 15px;
-        box-sizing: border-box;
+        background: #ffffff;
+        color: #1f2937;
         font-family: Arial, sans-serif;
-        transition: border-color 0.2s, box-shadow 0.2s;
-        background: #fff;
+        font-size: 15px;
+        line-height: 1.4;
+        box-sizing: border-box;
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background-color 0.2s ease;
+    }
+
+    .form-group input {
+        height: 48px;
     }
 
     .form-group textarea {
         min-height: 140px;
         resize: vertical;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #9ca3af;
     }
 
     .form-group input:hover,
@@ -153,23 +208,27 @@
     .form-group textarea:focus {
         outline: none;
         border-color: #2e7d32;
-        box-shadow: 0 0 0 3px rgba(46,125,50,0.12);
+        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+        background: #fcfffc;
     }
 
     .field-help {
-        color: #888;
+        color: #6b7280;
         font-size: 12px;
+        line-height: 1.5;
         margin-top: 6px;
     }
 
+
     /* =========================
-       ACTIONS
+       FORM ACTIONS
     ========================= */
 
     .form-actions {
         margin-top: 30px;
         padding-top: 22px;
         border-top: 1px solid #e5e7eb;
+
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -177,36 +236,50 @@
         flex-wrap: wrap;
     }
 
+    .save-button,
+    .reset-button {
+        min-height: 45px;
+        border-radius: 8px;
+        padding: 12px 22px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
     .save-button {
         background: #2e7d32;
-        color: white;
-        border: none;
-        padding: 13px 25px;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.2s;
+        color: #ffffff;
+        border: 1px solid #2e7d32;
     }
 
     .save-button:hover {
         background: #1b5e20;
+        border-color: #1b5e20;
         transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(27, 94, 32, 0.18);
+    }
+
+    .save-button:active {
+        transform: translateY(0);
     }
 
     .reset-button {
-        background: #f5f5f5;
-        color: #555;
-        border: 1px solid #ddd;
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
+        background: #ffffff;
+        color: #4b5563;
+        border: 1px solid #d1d5db;
     }
 
     .reset-button:hover {
-        background: #eeeeee;
+        background: #f9fafb;
+        border-color: #9ca3af;
     }
+
 
     /* =========================
        INFORMATION BOX
@@ -214,18 +287,20 @@
 
     .info-box {
         margin-top: 20px;
+        padding: 18px 20px;
         background: #f0fdf4;
         border: 1px solid #bbf7d0;
         border-radius: 10px;
-        padding: 18px 20px;
         color: #166534;
         font-size: 14px;
-        line-height: 1.6;
+        line-height: 1.65;
     }
 
     .info-box strong {
         color: #14532d;
+        font-weight: 700;
     }
+
 
     /* =========================
        RESPONSIVE
@@ -235,10 +310,12 @@
 
         .quick-info {
             grid-template-columns: 1fr;
+            gap: 14px;
         }
 
         .form-grid {
             grid-template-columns: 1fr;
+            gap: 18px;
         }
 
         .form-group.full-width {
@@ -246,19 +323,50 @@
         }
 
         .settings-card {
-            padding: 22px;
+            padding: 24px;
         }
-
     }
 
+
     @media (max-width: 600px) {
+
+        .settings-page {
+            padding-top: 5px;
+        }
+
+        .settings-header {
+            margin-bottom: 20px;
+        }
 
         .settings-header h1 {
             font-size: 25px;
         }
 
+        .settings-header p {
+            font-size: 14px;
+        }
+
         .settings-icon {
-            font-size: 34px;
+            width: 52px;
+            height: 52px;
+            font-size: 28px;
+        }
+
+        .info-card {
+            padding: 17px;
+        }
+
+        .info-card-value {
+            font-size: 16px;
+        }
+
+        .settings-card {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .section-title {
+            font-size: 19px;
         }
 
         .form-actions {
@@ -271,277 +379,304 @@
             width: 100%;
         }
 
+        .info-box {
+            padding: 16px;
+            font-size: 13px;
+        }
+    }
+
+
+    @media (max-width: 400px) {
+
+        .settings-header {
+            align-items: flex-start;
+        }
+
+        .settings-icon {
+            width: 46px;
+            height: 46px;
+            font-size: 24px;
+        }
+
+        .settings-card {
+            padding: 16px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            font-size: 14px;
+        }
     }
 
 </style>
 
-
 <div class="settings-page">
 
-    <!-- =========================
-         PAGE HEADER
-    ========================= -->
+<!-- =========================
+     PAGE HEADER
+========================= -->
 
-    <div class="settings-header">
+<div class="settings-header">
 
-        <div>
+    <div>
 
-            <h1>
-                ⚙️ Farm Settings
-            </h1>
+        <h1>
+            ⚙️ Farm Settings
+        </h1>
 
-            <p>
-                Manage your farm information and contact details.
-            </p>
+        <p>
+            Manage your farm information and contact details.
+        </p>
 
+    </div>
+
+    <div class="settings-icon">
+        🏡
+    </div>
+
+</div>
+
+
+<!-- =========================
+     CURRENT FARM SUMMARY
+========================= -->
+
+<div class="quick-info">
+
+    <div class="info-card">
+
+        <div class="info-card-label">
+            Farm Name
         </div>
 
-        <div class="settings-icon">
-            🏡
+        <div class="info-card-value">
+            {{ settings.farm_name|default:"Not configured" }}
         </div>
 
     </div>
 
 
-    <!-- =========================
-         CURRENT FARM SUMMARY
-    ========================= -->
+    <div class="info-card">
 
-    <div class="quick-info">
-
-        <div class="info-card">
-
-            <div class="info-card-label">
-                Farm Name
-            </div>
-
-            <div class="info-card-value">
-                {{ settings.farm_name|default:"Not configured" }}
-            </div>
-
+        <div class="info-card-label">
+            Location
         </div>
 
-
-        <div class="info-card">
-
-            <div class="info-card-label">
-                Location
-            </div>
-
-            <div class="info-card-value">
-                {{ settings.location|default:"Not configured" }}
-            </div>
-
-        </div>
-
-
-        <div class="info-card">
-
-            <div class="info-card-label">
-                Owner
-            </div>
-
-            <div class="info-card-value">
-                {{ settings.owner_name|default:"Not configured" }}
-            </div>
-
+        <div class="info-card-value">
+            {{ settings.location|default:"Not configured" }}
         </div>
 
     </div>
 
 
-    <!-- =========================
-         SETTINGS FORM
-    ========================= -->
+    <div class="info-card">
 
-    <div class="settings-card">
-
-        <div class="section-title">
-            Farm Information
+        <div class="info-card-label">
+            Owner
         </div>
 
-        <div class="section-description">
-            Keep your farm profile up to date. This information can be
-            displayed across WAHOME HERD reports and farm records.
+        <div class="info-card-value">
+            {{ settings.owner_name|default:"Not configured" }}
         </div>
 
+    </div>
 
-        <form method="POST">
-
-            {% csrf_token %}
-
-
-            <div class="form-grid">
-
-                <!-- FARM NAME -->
-
-                <div class="form-group">
-
-                    <label for="farm_name">
-                        Farm Name
-                        <span class="required">*</span>
-                    </label>
-
-                    <input
-                        type="text"
-                        id="farm_name"
-                        name="farm_name"
-                        value="{{ settings.farm_name }}"
-                        placeholder="Enter farm name"
-                        required
-                    >
-
-                    <div class="field-help">
-                        The name used to identify your farm.
-                    </div>
-
-                </div>
+</div>
 
 
-                <!-- LOCATION -->
+<!-- =========================
+     SETTINGS FORM
+========================= -->
 
-                <div class="form-group">
+<div class="settings-card">
 
-                    <label for="location">
-                        📍 Location
-                    </label>
+    <div class="section-title">
+        Farm Information
+    </div>
 
-                    <input
-                        type="text"
-                        id="location"
-                        name="location"
-                        value="{{ settings.location }}"
-                        placeholder="e.g. Nairobi, Kenya"
-                    >
-
-                    <div class="field-help">
-                        Enter the town, county, or general farm location.
-                    </div>
-
-                </div>
+    <div class="section-description">
+        Keep your farm profile up to date. This information can be
+        displayed across WAHOME HERD reports and farm records.
+    </div>
 
 
-                <!-- OWNER -->
+    <form method="POST">
 
-                <div class="form-group">
-
-                    <label for="owner_name">
-                        👤 Owner Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="owner_name"
-                        name="owner_name"
-                        value="{{ settings.owner_name }}"
-                        placeholder="Enter owner name"
-                    >
-
-                </div>
+        {% csrf_token %}
 
 
-                <!-- PHONE -->
+        <div class="form-grid">
 
-                <div class="form-group">
+            <!-- FARM NAME -->
 
-                    <label for="phone">
-                        📞 Phone Number
-                    </label>
+            <div class="form-group">
 
-                    <input
-                        type="text"
-                        id="phone"
-                        name="phone"
-                        value="{{ settings.phone }}"
-                        placeholder="Enter phone number"
-                    >
+                <label for="farm_name">
+                    Farm Name
+                    <span class="required">*</span>
+                </label>
 
-                </div>
-
-
-                <!-- EMAIL -->
-
-                <div class="form-group">
-
-                    <label for="email">
-                        ✉️ Email Address
-                    </label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value="{{ settings.email }}"
-                        placeholder="Enter email address"
-                    >
-
-                </div>
-
-
-                <!-- DESCRIPTION -->
-
-                <div class="form-group full-width">
-
-                    <label for="description">
-                        📝 Farm Description
-                    </label>
-
-                    <textarea
-                        id="description"
-                        name="description"
-                        placeholder="Describe your farm, livestock activities, production operations, or any other important information..."
-                    >{{ settings.description }}</textarea>
-
-                    <div class="field-help">
-                        This can be used to describe your farm and its main activities.
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =========================
-                 FORM ACTIONS
-            ========================= -->
-
-            <div class="form-actions">
-
-                <button
-                    type="reset"
-                    class="reset-button"
+                <input
+                    type="text"
+                    id="farm_name"
+                    name="farm_name"
+                    value="{{ settings.farm_name }}"
+                    placeholder="Enter farm name"
+                    required
                 >
-                    ↺ Reset Changes
-                </button>
 
-                <button
-                    type="submit"
-                    class="save-button"
-                >
-                    💾 Save Farm Settings
-                </button>
+                <div class="field-help">
+                    The name used to identify your farm.
+                </div>
 
             </div>
 
-        </form>
 
-    </div>
+            <!-- LOCATION -->
+
+            <div class="form-group">
+
+                <label for="location">
+                    📍 Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    value="{{ settings.location }}"
+                    placeholder="e.g. Nairobi, Kenya"
+                >
+
+                <div class="field-help">
+                    Enter the town, county, or general farm location.
+                </div>
+
+            </div>
 
 
-    <!-- =========================
-         INFORMATION
-    ========================= -->
+            <!-- OWNER -->
 
-    <div class="info-box">
+            <div class="form-group">
 
-        <strong>💡 Farm Profile Information</strong><br>
+                <label for="owner_name">
+                    👤 Owner Name
+                </label>
 
-        Your farm settings are stored in the WAHOME HERD database.
-        Keeping these details updated will allow the system to use your
-        farm information throughout dashboards, reports, and other
-        farm-management features.
+                <input
+                    type="text"
+                    id="owner_name"
+                    name="owner_name"
+                    value="{{ settings.owner_name }}"
+                    placeholder="Enter owner name"
+                >
 
-    </div>
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phone">
+                    📞 Phone Number
+                </label>
+
+                <input
+                    type="text"
+                    id="phone"
+                    name="phone"
+                    value="{{ settings.phone }}"
+                    placeholder="Enter phone number"
+                >
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    ✉️ Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ settings.email }}"
+                    placeholder="Enter email address"
+                >
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group full-width">
+
+                <label for="description">
+                    📝 Farm Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Describe your farm, livestock activities, production operations, or any other important information..."
+                >{{ settings.description }}</textarea>
+
+                <div class="field-help">
+                    This can be used to describe your farm and its main activities.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             FORM ACTIONS
+        ========================= -->
+
+        <div class="form-actions">
+
+            <button
+                type="reset"
+                class="reset-button"
+            >
+                ↺ Reset Changes
+            </button>
+
+            <button
+                type="submit"
+                class="save-button"
+            >
+                💾 Save Farm Settings
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =========================
+     INFORMATION
+========================= -->
+
+<div class="info-box">
+
+    <strong>💡 Farm Profile Information</strong><br>
+
+    Your farm settings are stored in the WAHOME HERD database.
+    Keeping these details updated will allow the system to use your
+    farm information throughout dashboards, reports, and other
+    farm-management features.
+
+</div>
+
 
 </div>
 

@@ -1,518 +1,879 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}{{ farm.farm_name|default:"WAHOME HERD" }}{% endblock %}</title>
+```
+<title>{% block title %}{{ farm.farm_name|default:"WAHOME HERD" }}{% endblock %}</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+    /* =========================
+       GLOBAL
+    ========================= */
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #263238;
-        }
+    * {
+        box-sizing: border-box;
+    }
 
-        /* =========================
-           SIDEBAR
-        ========================= */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        color: #263238;
+        line-height: 1.5;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+        font-family: inherit;
+    }
+
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: #1b5e20;
+        color: white;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 10px;
+    }
+
+
+    /* =========================
+       BRAND
+    ========================= */
+
+    .brand {
+        padding: 24px 18px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .brand h1 {
+        margin: 0;
+        font-size: 23px;
+        line-height: 1.2;
+        letter-spacing: 0.7px;
+        font-weight: 700;
+    }
+
+    .brand p {
+        margin: 7px 0 0;
+        font-size: 12px;
+        opacity: 0.78;
+    }
+
+
+    /* =========================
+       USER PANEL
+    ========================= */
+
+    .user-panel {
+        margin: 12px;
+        padding: 14px;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+    }
+
+    .user-panel-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border-radius: 50%;
+        background: white;
+        color: #1b5e20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 17px;
+    }
+
+    .user-details {
+        min-width: 0;
+    }
+
+    .user-name {
+        font-weight: bold;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .user-role {
+        font-size: 11px;
+        margin-top: 3px;
+        opacity: 0.78;
+    }
+
+    .login-status {
+        margin-top: 10px;
+        font-size: 11px;
+        color: #c8e6c9;
+    }
+
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    .nav {
+        padding: 12px;
+    }
+
+    .nav-section {
+        margin: 19px 10px 7px;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        font-weight: 700;
+        opacity: 0.62;
+    }
+
+    .nav-section:first-child {
+        margin-top: 5px;
+    }
+
+    .nav a {
+        display: block;
+        text-decoration: none;
+        color: white;
+        padding: 10px 13px;
+        margin-bottom: 3px;
+        border-radius: 7px;
+        font-size: 14px;
+        transition:
+            background 0.18s ease,
+            transform 0.18s ease;
+    }
+
+    .nav a:hover {
+        background: rgba(255, 255, 255, 0.11);
+        transform: translateX(2px);
+    }
+
+    /* ACTIVE PAGE */
+
+    .nav a.active {
+        background: rgba(255, 255, 255, 0.18);
+        font-weight: 700;
+        box-shadow: inset 3px 0 0 rgba(255, 255, 255, 0.75);
+    }
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    .logout-form {
+        margin: 12px;
+        padding-bottom: 12px;
+    }
+
+    .logout-btn {
+        width: 100%;
+        border: none;
+        background: #c62828;
+        color: white;
+        padding: 11px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: left;
+        transition:
+            background 0.18s ease,
+            transform 0.18s ease;
+    }
+
+    .logout-btn:hover {
+        background: #b71c1c;
+        transform: translateY(-1px);
+    }
+
+    .logout-btn:focus-visible {
+        outline: 3px solid rgba(255, 255, 255, 0.35);
+        outline-offset: 2px;
+    }
+
+
+    /* =========================
+       MAIN CONTENT
+    ========================= */
+
+    .main-content {
+        margin-left: 250px;
+        min-height: 100vh;
+    }
+
+
+    /* =========================
+       TOPBAR
+    ========================= */
+
+    .topbar {
+        min-height: 64px;
+        background: white;
+        padding: 16px 30px;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 900;
+    }
+
+    .topbar h2 {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.2;
+        color: #1b5e20;
+        font-weight: 700;
+    }
+
+
+    /* =========================
+       PAGE CONTENT
+    ========================= */
+
+    .content {
+        padding: 30px;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+
+    /* =========================
+       COMMON CARDS
+    ========================= */
+
+    .card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    }
+
+
+    /* =========================
+       COMMON BUTTONS
+    ========================= */
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 16px;
+        border-radius: 7px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.2;
+        transition:
+            background 0.18s ease,
+            transform 0.18s ease,
+            box-shadow 0.18s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn:focus-visible {
+        outline: 3px solid rgba(46, 125, 50, 0.22);
+        outline-offset: 2px;
+    }
+
+    .btn-primary {
+        background: #2e7d32;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #1b5e20;
+        box-shadow: 0 4px 10px rgba(27, 94, 32, 0.18);
+    }
+
+    .btn-danger {
+        background: #c62828;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #b71c1c;
+    }
+
+    .btn-warning {
+        background: #ef6c00;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background: #e65100;
+    }
+
+    .btn-secondary {
+        background: #607d8b;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #455a64;
+    }
+
+
+    /* =========================
+       FORMS
+    ========================= */
+
+    input,
+    select,
+    textarea {
+        max-width: 100%;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #2e7d32 !important;
+        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.10);
+    }
+
+
+    /* =========================
+       TABLES
+    ========================= */
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #f1f5f2;
+        color: #374151;
+        font-weight: 700;
+        text-align: left;
+    }
+
+    th,
+    td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: middle;
+    }
+
+    tbody tr:hover {
+        background: #f8faf9;
+    }
+
+
+    /* =========================
+       MESSAGES
+    ========================= */
+
+    .messages {
+        margin-bottom: 20px;
+    }
+
+    .messages > * {
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 1000px) {
 
         .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 250px;
-            height: 100vh;
-            background: #1b5e20;
-            color: white;
-            overflow-y: auto;
-            z-index: 1000;
+            width: 220px;
         }
-
-        .brand {
-            padding: 25px 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-        }
-
-        .brand h1 {
-            margin: 0;
-            font-size: 24px;
-            letter-spacing: 1px;
-        }
-
-        .brand p {
-            margin: 6px 0 0;
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
-        .nav {
-            padding: 15px 12px;
-        }
-
-        .nav-section {
-            margin: 18px 10px 8px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.65;
-        }
-
-        .nav a {
-            display: block;
-            text-decoration: none;
-            color: white;
-            padding: 11px 13px;
-            margin-bottom: 4px;
-            border-radius: 7px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .nav a:hover {
-            background: rgba(255,255,255,0.12);
-        }
-
-        .nav a.active {
-            background: rgba(255,255,255,0.18);
-            font-weight: bold;
-        }
-
-        /* =========================
-           USER PANEL
-        ========================= */
-
-        .user-panel {
-            margin: 12px;
-            padding: 14px;
-            background: rgba(0,0,0,0.15);
-            border-radius: 10px;
-        }
-
-        .user-panel-top {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: white;
-            color: #1b5e20;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 17px;
-        }
-
-        .user-details {
-            min-width: 0;
-        }
-
-        .user-name {
-            font-weight: bold;
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-role {
-            font-size: 11px;
-            margin-top: 3px;
-            opacity: 0.8;
-        }
-
-        .login-status {
-            margin-top: 10px;
-            font-size: 11px;
-            color: #c8e6c9;
-        }
-
-        /* =========================
-           LOGOUT BUTTON
-        ========================= */
-
-        .logout-form {
-            margin: 12px;
-        }
-
-        .logout-btn {
-            width: 100%;
-            border: none;
-            background: #c62828;
-            color: white;
-            padding: 11px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: left;
-            transition: 0.2s;
-        }
-
-        .logout-btn:hover {
-            background: #b71c1c;
-        }
-
-        /* =========================
-           MAIN CONTENT
-        ========================= */
 
         .main-content {
-            margin-left: 250px;
-            min-height: 100vh;
-        }
-
-        .topbar {
-            background: white;
-            padding: 18px 30px;
-            border-bottom: 1px solid #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .topbar h2 {
-            margin: 0;
-            font-size: 20px;
-            color: #1b5e20;
+            margin-left: 220px;
         }
 
         .content {
-            padding: 30px;
+            padding: 24px;
+        }
+    }
+
+
+    @media (max-width: 700px) {
+
+        .sidebar {
+            position: relative;
+            width: 100%;
+            height: auto;
+            max-height: none;
         }
 
-        /* =========================
-           COMMON BUTTONS
-        ========================= */
+        .main-content {
+            margin-left: 0;
+        }
+
+        .brand {
+            padding: 20px 15px;
+        }
+
+        .nav {
+            padding: 10px;
+        }
+
+        .topbar {
+            position: relative;
+            min-height: auto;
+            padding: 15px 18px;
+        }
+
+        .topbar h2 {
+            font-size: 18px;
+        }
+
+        .content {
+            padding: 16px;
+        }
+
+        table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
 
         .btn {
-            display: inline-block;
-            padding: 10px 16px;
-            border-radius: 7px;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
+            padding: 9px 13px;
+        }
+    }
+
+
+    @media (max-width: 450px) {
+
+        .content {
+            padding: 12px;
         }
 
-        .btn-primary {
-            background: #2e7d32;
-            color: white;
+        .topbar {
+            padding: 14px;
         }
 
-        .btn-primary:hover {
-            background: #1b5e20;
+        .topbar h2 {
+            font-size: 17px;
         }
 
-        .btn-danger {
-            background: #c62828;
-            color: white;
+        .brand h1 {
+            font-size: 21px;
         }
+    }
 
-        .btn-warning {
-            background: #ef6c00;
-            color: white;
-        }
+</style>
 
-        .btn-secondary {
-            background: #607d8b;
-            color: white;
-        }
+{% block extra_css %}{% endblock %}
+```
 
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media (max-width: 900px) {
-
-            .sidebar {
-                width: 210px;
-            }
-
-            .main-content {
-                margin-left: 210px;
-            }
-
-            .content {
-                padding: 20px;
-            }
-        }
-
-        @media (max-width: 700px) {
-
-            .sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .content {
-                padding: 15px;
-            }
-
-            .topbar {
-                padding: 15px;
-            }
-        }
-    </style>
-
-    {% block extra_css %}{% endblock %}
 </head>
 
 <body>
 
+```
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <h1>🐄 {{ farm.farm_name|default:"WAHOME HERD" }}</h1>
+
+        <p>Farm Management System</p>
+
+    </div>
+
+
+    {% if user.is_authenticated %}
+
+
+    <!-- USER PANEL -->
+
+    <div class="user-panel">
+
+        <div class="user-panel-top">
+
+            <div class="user-avatar">
+                {{ user.username|first|upper }}
+            </div>
+
+            <div class="user-details">
+
+                <div class="user-name">
+
+                    {% if user.get_full_name %}
+                        {{ user.get_full_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+
+                </div>
+
+                <div class="user-role">
+
+                    {% if user.is_superuser %}
+
+                        Administrator
+
+                    {% elif user.groups.all %}
+
+                        {{ user.groups.first.name }}
+
+                    {% else %}
+
+                        Farm User
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="login-status">
+            ✓ Logged in
+        </div>
+
+    </div>
+
+
+
     <!-- =========================
-         SIDEBAR
+         NAVIGATION
     ========================= -->
 
-    <aside class="sidebar">
+    <nav class="nav">
 
-        <div class="brand">
-            <h1>🐄 {{ farm.farm_name|default:"WAHOME HERD" }}</h1>
-            <p>Farm Management System</p>
+
+        <div class="nav-section">
+            Main
         </div>
 
-        {% if user.is_authenticated %}
 
-        <!-- USER PANEL -->
+        <!-- DASHBOARD -->
 
-        <div class="user-panel">
+        <a href="{% url 'dashboard' %}"
+           class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+            🏠 Dashboard
+        </a>
 
-            <div class="user-panel-top">
 
-                <div class="user-avatar">
-                    {{ user.username|first|upper }}
-                </div>
 
-                <div class="user-details">
-
-                    <div class="user-name">
-
-                        {% if user.get_full_name %}
-                            {{ user.get_full_name }}
-                        {% else %}
-                            {{ user.username }}
-                        {% endif %}
-
-                    </div>
-
-                    <div class="user-role">
-
-                        {% if user.is_superuser %}
-                            Administrator
-
-                        {% elif user.groups.all %}
-                            {{ user.groups.first.name }}
-
-                        {% else %}
-                            Farm User
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="login-status">
-                ✓ Logged in
-            </div>
-
+        <div class="nav-section">
+            Livestock
         </div>
+
+
+        <!-- LIVESTOCK -->
+
+        <a href="{% url 'livestock_list' %}"
+           class="{% if request.resolver_match.url_name == 'livestock_list' %}active{% endif %}">
+            🐄 All Livestock
+        </a>
+
+
+        <a href="{% url 'add_animal' %}"
+           class="{% if request.resolver_match.url_name == 'add_animal' %}active{% endif %}">
+            ➕ Add Animal
+        </a>
+
+
+
+        <div class="nav-section">
+            Records
+        </div>
+
+
+        <!-- HEALTH -->
+
+        <a href="{% url 'all_health_records' %}"
+           class="{% if request.resolver_match.url_name == 'all_health_records' %}active{% endif %}">
+            ❤️ Health Records
+        </a>
+
+
+        <!-- BREEDING -->
+
+        <a href="{% url 'all_breeding_records' %}"
+           class="{% if request.resolver_match.url_name == 'all_breeding_records' %}active{% endif %}">
+            🧬 Breeding Records
+        </a>
+
+
+        <!-- PRODUCTION -->
+
+        <a href="{% url 'all_production_records' %}"
+           class="{% if request.resolver_match.url_name == 'all_production_records' %}active{% endif %}">
+            🥛 Production Records
+        </a>
+
+
+
+        <div class="nav-section">
+            Reports
+        </div>
+
+
+        <!-- REPORTS -->
+
+        <a href="{% url 'reports' %}"
+           class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+            📊 Reports & Analytics
+        </a>
+
 
 
         <!-- =========================
-             NAVIGATION
+             MANAGEMENT
         ========================= -->
 
-        <nav class="nav">
-
-            <div class="nav-section">
-                Main
-            </div>
-
-            <a href="{% url 'dashboard' %}">
-                🏠 Dashboard
-            </a>
-
-            <div class="nav-section">
-                Livestock
-            </div>
-
-            <a href="{% url 'livestock_list' %}">
-                🐄 All Livestock
-            </a>
-
-            <a href="{% url 'add_animal' %}">
-                ➕ Add Animal
-            </a>
-
-
-            <div class="nav-section">
-                Records
-            </div>
-
-            <a href="{% url 'all_health_records' %}">
-                ❤️ Health Records
-            </a>
-
-            <a href="{% url 'all_breeding_records' %}">
-                🧬 Breeding Records
-            </a>
-
-            <a href="{% url 'all_production_records' %}">
-                🥛 Production Records
-            </a>
-
-
-            <div class="nav-section">
-                Reports
-            </div>
-
-            <a href="{% url 'reports' %}">
-                📊 Reports & Analytics
-            </a>
-
-
-            <!-- =========================
-                 MANAGEMENT
-            ========================= -->
-
-            {% if user.is_superuser or user.groups.all.0.name == "Administrator" or user.groups.all.0.name == "Farm Manager" %}
+        {% if user.is_superuser or user.groups.all.0.name == "Administrator" or user.groups.all.0.name == "Farm Manager" %}
 
             <div class="nav-section">
                 Management
             </div>
 
-            <a href="{% url 'finance_dashboard' %}">
+
+            <!-- FINANCE DASHBOARD -->
+
+            <a href="{% url 'finance_dashboard' %}"
+               class="{% if request.resolver_match.url_name == 'finance_dashboard' %}active{% endif %}">
                 💰 Finance Dashboard
             </a>
 
-            <a href="{% url 'add_financial_record' %}">
+
+            <!-- ADD FINANCIAL RECORD -->
+
+            <a href="{% url 'add_financial_record' %}"
+               class="{% if request.resolver_match.url_name == 'add_financial_record' %}active{% endif %}">
                 ➕ Add Financial Record
             </a>
 
-            <a href="{% url 'financial_records' %}">
+
+            <!-- FINANCIAL RECORDS -->
+
+            <a href="{% url 'financial_records' %}"
+               class="{% if request.resolver_match.url_name == 'financial_records' %}active{% endif %}">
                 💳 Financial Records
             </a>
 
-            {% endif %}
+        {% endif %}
 
 
-            <!-- =========================
-                 ADMINISTRATION
-            ========================= -->
 
-            {% if user.is_superuser or user.groups.all.0.name == "Administrator" %}
+        <!-- =========================
+             ADMINISTRATION
+        ========================= -->
+
+        {% if user.is_superuser or user.groups.all.0.name == "Administrator" %}
 
             <div class="nav-section">
                 Administration
             </div>
 
-            <a href="{% url 'user_management' %}">
+
+            <!-- USER MANAGEMENT -->
+
+            <a href="{% url 'user_management' %}"
+               class="{% if request.resolver_match.url_name == 'user_management' %}active{% endif %}">
                 👥 User Management
             </a>
 
-            <a href="{% url 'activity_log' %}">
+
+            <!-- ACTIVITY LOG -->
+
+            <a href="{% url 'activity_log' %}"
+               class="{% if request.resolver_match.url_name == 'activity_log' %}active{% endif %}">
                 📋 Activity Log
             </a>
 
-            <a href="{% url 'farm_settings' %}">
+
+            <!-- FARM SETTINGS -->
+
+            <a href="{% url 'farm_settings' %}"
+               class="{% if request.resolver_match.url_name == 'farm_settings' %}active{% endif %}">
                 ⚙️ Farm Settings
             </a>
 
-            {% endif %}
+        {% endif %}
 
-
-            <!-- =========================
-                 ACCOUNT
-            ========================= -->
-
-            <div class="nav-section">
-                Account
-            </div>
-
-            <a href="{% url 'profile' %}">
-                👤 My Profile
-            </a>
-
-            <a href="{% url 'password_change' %}">
-                🔑 Change Password
-            </a>
-
-        </nav>
 
 
         <!-- =========================
-             LOGOUT
+             ACCOUNT
         ========================= -->
 
-        <form
-            method="post"
-            action="{% url 'logout' %}"
-            class="logout-form"
-        >
+        <div class="nav-section">
+            Account
+        </div>
 
-            {% csrf_token %}
 
-            <button
-                type="submit"
-                class="logout-btn"
-            >
-                🚪 Logout
-            </button>
+        <!-- PROFILE -->
 
-        </form>
+        <a href="{% url 'profile' %}"
+           class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            👤 My Profile
+        </a>
 
-        {% endif %}
 
-    </aside>
+        <!-- CHANGE PASSWORD -->
+
+        <a href="{% url 'password_change' %}"
+           class="{% if request.resolver_match.url_name == 'password_change' %}active{% endif %}">
+            🔑 Change Password
+        </a>
+
+
+    </nav>
+
 
 
     <!-- =========================
-         MAIN CONTENT
+         LOGOUT
     ========================= -->
 
-    <main class="main-content">
+    <form
+        method="post"
+        action="{% url 'logout' %}"
+        class="logout-form"
+    >
 
-        <div class="topbar">
+        {% csrf_token %}
 
-            <h2>
-                {% block page_title %}
-                    {{ farm.farm_name|default:"WAHOME HERD" }}
-                {% endblock %}
-            </h2>
+        <button
+            type="submit"
+            class="logout-btn"
+        >
+            🚪 Logout
+        </button>
 
-        </div>
+    </form>
 
-        <div class="content">
 
-            {% block content %}
+    {% endif %}
+
+
+</aside>
+
+
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<main class="main-content">
+
+
+    <div class="topbar">
+
+        <h2>
+
+            {% block page_title %}
+
+                {{ farm.farm_name|default:"WAHOME HERD" }}
+
             {% endblock %}
 
-        </div>
+        </h2>
 
-    </main>
+    </div>
 
 
-    {% block extra_js %}
-    {% endblock %}
+
+    <div class="content">
+
+
+        {% if messages %}
+
+            <div class="messages">
+
+                {% for message in messages %}
+
+                    <div class="{{ message.tags }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+
+        {% block content %}
+        {% endblock %}
+
+
+    </div>
+
+
+</main>
+
+
+
+{% block extra_js %}
+{% endblock %}
+```
 
 </body>
+
 </html>

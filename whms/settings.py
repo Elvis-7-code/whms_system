@@ -1,3 +1,4 @@
+
 """
 Django settings for whms project.
 
@@ -6,6 +7,7 @@ Configured for both local development and Vercel deployment.
 
 from pathlib import Path
 import os
+from urllib.parse import urlparse, parse_qs, unquote
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,32 +17,49 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # ============================================================
 
-# IMPORTANT:
-# Set DJANGO_SECRET_KEY in your environment for deployment.
-# A fallback is provided only so local development continues
-# to work until you configure the environment variable.
+# Use an environment variable in production.
+# The local fallback allows development to continue normally.
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
     'django-insecure-local-development-key-change-before-deployment'
 )
 
+
 # Local development defaults to True.
-# Vercel deployment will set DEBUG=False.
+# Vercel production environment should set DEBUG=False.
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
 
-# Hosts allowed to access the Django application.
+# ============================================================
+# ALLOWED HOSTS
+# ============================================================
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
 ]
 
-# Add the Vercel domain through the environment variable:
-# ALLOWED_HOSTS=your-project.vercel.app
+
+# Vercel hostname.
+# Example:
+# VERCEL_HOST=your-project.vercel.app
 vercel_host = os.environ.get('VERCEL_HOST')
 
 if vercel_host:
     ALLOWED_HOSTS.append(vercel_host)
+
+
+# Also allow additional hosts through an environment variable.
+# Example:
+# ALLOWED_HOSTS=example.com,www.example.com
+additional_hosts = os.environ.get('ALLOWED_HOSTS')
+
+if additional_hosts:
+    ALLOWED_HOSTS.extend(
+        host.strip()
+        for host in additional_hosts.split(',')
+        if host.strip()
+    )
 
 
 # ============================================================
@@ -49,11 +68,24 @@ if vercel_host:
 
 CSRF_TRUSTED_ORIGINS = []
 
-vercel_host = os.environ.get('VERCEL_HOST')
 
 if vercel_host:
     CSRF_TRUSTED_ORIGINS.append(
         f'https://{vercel_host}'
+    )
+
+
+# Additional trusted origins can be supplied through:
+# CSRF_TRUSTED_ORIGINS=https://example.com,https://www.example.com
+additional_csrf_origins = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS'
+)
+
+if additional_csrf_origins:
+    CSRF_TRUSTED_ORIGINS.extend(
+        origin.strip()
+        for origin in additional_csrf_origins.split(',')
+        if origin.strip()
     )
 
 
@@ -142,18 +174,99 @@ WSGI_APPLICATION = 'whms.wsgi.application'
 # DATABASE
 # ============================================================
 
-# For now, keep SQLite for local development.
+# Local development:
+#   SQLite is used automatically when DATABASE_URL is not set.
 #
-# When we configure the production database for Vercel,
-# this section will be updated to use PostgreSQL.
+# Production:
+#   PostgreSQL is used automatically when DATABASE_URL is set.
+#
+# Example DATABASE_URL:
+#   postgresql://username:password@hostname:5432/database
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
 
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+
+if DATABASE_URL:
+
+    # Support both:
+    # postgres://
+    # postgresql://
+
+    if DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace(
+            'postgres://',
+            'postgresql://',
+            1
+        )
+
+    parsed_db_url = urlparse(DATABASE_URL)
+
+    database_name = (
+        parsed_db_url.path.lstrip('/')
+        if parsed_db_url.path
+        else ''
+    )
+
+    database_user = (
+        unquote(parsed_db_url.username)
+        if parsed_db_url.username
+        else ''
+    )
+
+    database_password = (
+        unquote(parsed_db_url.password)
+        if parsed_db_url.password
+        else ''
+    )
+
+    database_host = parsed_db_url.hostname or ''
+
+    database_port = (
+        str(parsed_db_url.port)
+        if parsed_db_url.port
+        else '5432'
+    )
+
+    database_options = {}
+
+    query_parameters = parse_qs(
+        parsed_db_url.query
+    )
+
+    if 'sslmode' in query_parameters:
+        database_options['sslmode'] = (
+            query_parameters['sslmode'][0]
+        )
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+
+            'NAME': database_name,
+
+            'USER': database_user,
+
+            'PASSWORD': database_password,
+
+            'HOST': database_host,
+
+            'PORT': database_port,
+
+            'OPTIONS': database_options,
+        }
     }
-}
+
+else:
+
+    # Local development database.
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # ============================================================
@@ -227,9 +340,9 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 # EMAIL
 # ============================================================
 
-# Console email is perfect for local development.
-# Later, if you want real password-reset emails online,
-# we'll configure a real email service.
+# Console email is suitable for local development.
+# A real email service will be configured later for
+# production password-reset emails.
 
 EMAIL_BACKEND = (
     'django.core.mail.backends.console.EmailBackend'
@@ -244,6 +357,13 @@ DEFAULT_FROM_EMAIL = 'noreply@wahomeherd.local'
 
 if not DEBUG:
 
+    # Vercel terminates HTTPS before forwarding the request
+    # to the Django application.
+    SECURE_PROXY_SSL_HEADER = (
+        'HTTP_X_FORWARDED_PROTO',
+        'https'
+    )
+
     SECURE_SSL_REDIRECT = True
 
     SESSION_COOKIE_SECURE = True
@@ -255,3 +375,4 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
     X_FRAME_OPTIONS = 'DENY'
+
